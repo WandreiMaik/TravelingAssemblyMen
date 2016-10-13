@@ -19,7 +19,7 @@ namespace TravelingAssemblyMen
 
         public static void myEvent(object e, EventArgs stuffs)
         {
-
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
