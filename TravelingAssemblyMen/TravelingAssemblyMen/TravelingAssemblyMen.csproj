@@ -46,14 +46,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\CustomerInsertStyle.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Model\Customer.cs" />
+    <Compile Include="Model\Assembler.cs" />
+    <Compile Include="Model\Location.cs" />
+    <Compile Include="Model\MyRNG.cs" />
+    <Compile Include="Model\Position.cs" />
     <Compile Include="Model\Solution.cs" />
+    <Compile Include="Model\TAP.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
