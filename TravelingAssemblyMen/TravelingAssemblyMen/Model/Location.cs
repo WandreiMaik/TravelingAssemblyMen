@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace TravelingAssemblyMen.Model
 {
@@ -21,11 +22,42 @@ namespace TravelingAssemblyMen.Model
         #region Constructors
         public Location(Double X, Double Y)
         {
-            this._X = X;
-            this._Y = Y;
+            _X = X;
+            _Y = Y;
         }
 
-        public Location(PointF position) : this(position.X, position.Y) { }
+        public Location(String locationString)
+        {
+            locationString = Regex.Replace(locationString, @"\s+", "");
+
+            int start = locationString.IndexOf("(");
+            int split = locationString.IndexOf(";");
+            int end = locationString.IndexOf(")");
+
+            if (start == -1 || split == -1 || end == -1)
+            {
+                throw new ArgumentException(locationString);
+            }
+
+            string xCoordinate = locationString.Substring(start + 1, split - (start + 2));
+            string yCoordinate = locationString.Substring(split + 1, end - (split + 2));
+
+            Double x;
+            Double y;
+
+            try
+            {
+                x = Double.Parse(xCoordinate);
+                y = Double.Parse(yCoordinate);
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException(locationString);
+            }
+
+            _X = x;
+            _Y = y;
+        }
         #endregion
 
         #region CheckedCoordinates
@@ -68,6 +100,11 @@ namespace TravelingAssemblyMen.Model
             Double diffY = _Y - y;
 
             return Math.Sqrt(Math.Pow(diffX, 2) + Math.Pow(diffY, 2));
+        }
+
+        public override String ToString()
+        {
+            return "(" + _position.x + ";" + _position.y + ")";
         }
 
         #region Graphics

@@ -17,6 +17,14 @@ namespace TravelingAssemblyMen.Model
         private List<Location> _customerList;
         private List<Assembler> _assemblerList;
 
+        public Int32 NumberOfAssembler
+        {
+            get
+            {
+                return _assemblerList.Count;
+            }
+        }
+
         public Solution(List<Location> customerList, int assemblerCount)
         {
             _taskDistribution = new Dictionary<Location, Int32>();

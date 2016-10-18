@@ -47,13 +47,15 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.textBoxOvertimePenalty = new System.Windows.Forms.TextBox();
+            this.textBoxOverallWorkload = new System.Windows.Forms.TextBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFitness = new System.Windows.Forms.Label();
             this.labelFitnessValue = new System.Windows.Forms.Label();
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
-            this.textBoxOvertimePenalty = new System.Windows.Forms.TextBox();
-            this.textBoxOverallWorkload = new System.Windows.Forms.TextBox();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -105,7 +107,7 @@
             this.groupBoxManageTAP.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBoxManageTAP.Location = new System.Drawing.Point(3, 3);
             this.groupBoxManageTAP.Name = "groupBoxManageTAP";
-            this.groupBoxManageTAP.Size = new System.Drawing.Size(330, 124);
+            this.groupBoxManageTAP.Size = new System.Drawing.Size(330, 121);
             this.groupBoxManageTAP.TabIndex = 0;
             this.groupBoxManageTAP.TabStop = false;
             this.groupBoxManageTAP.Text = "Manage TAP";
@@ -118,12 +120,12 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.buttonGenerateTAP, 2, 1);
             this.tableLayoutPanel2.Controls.Add(this.label3, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.label4, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.numericCustomercount, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.numericAssemblercount, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.buttonOpenTAP, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.buttonGenerateTAP, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.buttonOpenTAP, 2, 1);
             this.tableLayoutPanel2.Controls.Add(this.buttonSaveTAP, 2, 2);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
@@ -132,18 +134,18 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(324, 105);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(324, 102);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // buttonGenerateTAP
             // 
-            this.buttonGenerateTAP.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonGenerateTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonGenerateTAP.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.buttonGenerateTAP, 2);
-            this.buttonGenerateTAP.Location = new System.Drawing.Point(165, 40);
+            this.buttonGenerateTAP.Location = new System.Drawing.Point(5, 39);
             this.buttonGenerateTAP.Margin = new System.Windows.Forms.Padding(5);
             this.buttonGenerateTAP.Name = "buttonGenerateTAP";
-            this.buttonGenerateTAP.Size = new System.Drawing.Size(152, 24);
+            this.buttonGenerateTAP.Size = new System.Drawing.Size(150, 24);
             this.buttonGenerateTAP.TabIndex = 0;
             this.buttonGenerateTAP.Text = "Generate TAP";
             this.buttonGenerateTAP.UseVisualStyleBackColor = true;
@@ -153,7 +155,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 11);
+            this.label3.Location = new System.Drawing.Point(3, 10);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(81, 13);
             this.label3.TabIndex = 1;
@@ -164,7 +166,7 @@
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(163, 11);
+            this.label4.Location = new System.Drawing.Point(163, 10);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(85, 13);
             this.label4.TabIndex = 2;
@@ -221,35 +223,38 @@
             // 
             // buttonOpenTAP
             // 
-            this.buttonOpenTAP.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.buttonOpenTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonOpenTAP.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.buttonOpenTAP, 2);
-            this.buttonOpenTAP.Location = new System.Drawing.Point(5, 75);
+            this.buttonOpenTAP.Location = new System.Drawing.Point(167, 39);
             this.buttonOpenTAP.Margin = new System.Windows.Forms.Padding(5);
             this.buttonOpenTAP.Name = "buttonOpenTAP";
-            this.buttonOpenTAP.Size = new System.Drawing.Size(150, 25);
+            this.buttonOpenTAP.Size = new System.Drawing.Size(150, 24);
             this.buttonOpenTAP.TabIndex = 5;
             this.buttonOpenTAP.Text = "Open TAP";
             this.buttonOpenTAP.UseVisualStyleBackColor = true;
+            this.buttonOpenTAP.Click += new System.EventHandler(this.buttonOpenTAP_Click);
             // 
             // buttonSaveTAP
             // 
-            this.buttonSaveTAP.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.buttonSaveTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.buttonSaveTAP.AutoSize = true;
             this.tableLayoutPanel2.SetColumnSpan(this.buttonSaveTAP, 2);
-            this.buttonSaveTAP.Location = new System.Drawing.Point(165, 75);
+            this.buttonSaveTAP.Enabled = false;
+            this.buttonSaveTAP.Location = new System.Drawing.Point(167, 73);
             this.buttonSaveTAP.Margin = new System.Windows.Forms.Padding(5);
             this.buttonSaveTAP.Name = "buttonSaveTAP";
-            this.buttonSaveTAP.Size = new System.Drawing.Size(152, 25);
+            this.buttonSaveTAP.Size = new System.Drawing.Size(150, 24);
             this.buttonSaveTAP.TabIndex = 6;
             this.buttonSaveTAP.Text = "Save TAP";
             this.buttonSaveTAP.UseVisualStyleBackColor = true;
+            this.buttonSaveTAP.Click += new System.EventHandler(this.buttonSaveTAP_Click);
             // 
             // groupBoxSolveTAP
             // 
             this.groupBoxSolveTAP.Controls.Add(this.tableLayoutPanel1);
             this.groupBoxSolveTAP.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxSolveTAP.Location = new System.Drawing.Point(3, 133);
+            this.groupBoxSolveTAP.Location = new System.Drawing.Point(3, 130);
             this.groupBoxSolveTAP.Name = "groupBoxSolveTAP";
             this.groupBoxSolveTAP.Size = new System.Drawing.Size(330, 54);
             this.groupBoxSolveTAP.TabIndex = 1;
@@ -261,8 +266,8 @@
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.buttonSolveGreedy, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.buttonSolveRandomly, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.buttonSolveGreedy, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.buttonSolveRandomly, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -273,8 +278,9 @@
             // 
             // buttonSolveGreedy
             // 
-            this.buttonSolveGreedy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSolveGreedy.Location = new System.Drawing.Point(5, 5);
+            this.buttonSolveGreedy.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonSolveGreedy.Enabled = false;
+            this.buttonSolveGreedy.Location = new System.Drawing.Point(167, 5);
             this.buttonSolveGreedy.Margin = new System.Windows.Forms.Padding(5);
             this.buttonSolveGreedy.Name = "buttonSolveGreedy";
             this.buttonSolveGreedy.Size = new System.Drawing.Size(152, 25);
@@ -284,8 +290,9 @@
             // 
             // buttonSolveRandomly
             // 
-            this.buttonSolveRandomly.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonSolveRandomly.Location = new System.Drawing.Point(167, 5);
+            this.buttonSolveRandomly.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonSolveRandomly.Enabled = false;
+            this.buttonSolveRandomly.Location = new System.Drawing.Point(5, 5);
             this.buttonSolveRandomly.Margin = new System.Windows.Forms.Padding(5);
             this.buttonSolveRandomly.Name = "buttonSolveRandomly";
             this.buttonSolveRandomly.Size = new System.Drawing.Size(152, 25);
@@ -298,7 +305,7 @@
             // 
             this.groupBox1.Controls.Add(this.tableLayoutPanel3);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox1.Location = new System.Drawing.Point(3, 193);
+            this.groupBox1.Location = new System.Drawing.Point(3, 190);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(330, 72);
             this.groupBox1.TabIndex = 2;
@@ -344,11 +351,31 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Over-All Workload:";
             // 
+            // textBoxOvertimePenalty
+            // 
+            this.textBoxOvertimePenalty.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOvertimePenalty.Location = new System.Drawing.Point(150, 3);
+            this.textBoxOvertimePenalty.Name = "textBoxOvertimePenalty";
+            this.textBoxOvertimePenalty.Size = new System.Drawing.Size(171, 20);
+            this.textBoxOvertimePenalty.TabIndex = 4;
+            this.textBoxOvertimePenalty.Text = "1,0";
+            this.textBoxOvertimePenalty.TextChanged += new System.EventHandler(this.textBoxOvertimePenalty_TextChanged);
+            // 
+            // textBoxOverallWorkload
+            // 
+            this.textBoxOverallWorkload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOverallWorkload.Location = new System.Drawing.Point(150, 29);
+            this.textBoxOverallWorkload.Name = "textBoxOverallWorkload";
+            this.textBoxOverallWorkload.Size = new System.Drawing.Size(171, 20);
+            this.textBoxOverallWorkload.TabIndex = 5;
+            this.textBoxOverallWorkload.Text = "1,0";
+            this.textBoxOverallWorkload.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
+            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.tableLayoutPanel4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(3, 271);
+            this.groupBox2.Location = new System.Drawing.Point(3, 268);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(330, 51);
             this.groupBox2.TabIndex = 3;
@@ -402,25 +429,15 @@
             this.panelSolvedGraph.TabIndex = 3;
             this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
             // 
-            // textBoxOvertimePenalty
+            // saveFileDialog
             // 
-            this.textBoxOvertimePenalty.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOvertimePenalty.Location = new System.Drawing.Point(150, 3);
-            this.textBoxOvertimePenalty.Name = "textBoxOvertimePenalty";
-            this.textBoxOvertimePenalty.Size = new System.Drawing.Size(171, 20);
-            this.textBoxOvertimePenalty.TabIndex = 4;
-            this.textBoxOvertimePenalty.Text = "1,0";
-            this.textBoxOvertimePenalty.TextChanged += new System.EventHandler(this.textBoxOvertimePenalty_TextChanged);
+            this.saveFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            this.saveFileDialog.Title = "TAP";
             // 
-            // textBoxOverallWorkload
+            // openFileDialog
             // 
-            this.textBoxOverallWorkload.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOverallWorkload.Location = new System.Drawing.Point(150, 29);
-            this.textBoxOverallWorkload.Name = "textBoxOverallWorkload";
-            this.textBoxOverallWorkload.Size = new System.Drawing.Size(171, 20);
-            this.textBoxOverallWorkload.TabIndex = 5;
-            this.textBoxOverallWorkload.Text = "1,0";
-            this.textBoxOverallWorkload.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
+            this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            this.openFileDialog.Title = "TAP";
             // 
             // Form1
             // 
@@ -480,6 +497,8 @@
         private System.Windows.Forms.Label labelFitnessValue;
         private System.Windows.Forms.TextBox textBoxOvertimePenalty;
         private System.Windows.Forms.TextBox textBoxOverallWorkload;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 
