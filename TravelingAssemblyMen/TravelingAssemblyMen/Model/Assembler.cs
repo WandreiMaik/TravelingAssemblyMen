@@ -13,6 +13,7 @@ namespace TravelingAssemblyMen.Model
         private List<Location> _customersAssigned;
         private Double _workload;
         private bool _workloadIsDirty;
+        private Location _startingPosition;
 
         public Double Workload
         {
@@ -27,11 +28,41 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
+        public Location LastCustomer
+        {
+            get
+            {
+                if (_customersAssigned.Count != 0)
+                {
+                    return _customersAssigned.Last();
+                }
+
+                return null;
+            }
+        }
+
+        public Location StartingPosition
+        {
+            get
+            {
+                if (_startingPosition == null)
+                {
+                    return new Location(0, 0);
+                }
+
+                return _startingPosition;
+            }
+        }
+
         public Assembler()
         {
             _customersAssigned = new List<Location>();
             _workload = 0;
             _workloadIsDirty = true;
+        }
+        public Assembler(Location startingPosition) : this()
+        {
+            _startingPosition = startingPosition;
         }
 
         public void AcceptTask(Location newCustomer)
@@ -106,7 +137,7 @@ namespace TravelingAssemblyMen.Model
             _customersAssigned.Add(newCustomer);
         }
 
-        public void Draw(Graphics graphics, Position origin, double pixelsPerKilometer)
+        public void Draw(Graphics graphics, Position origin, double pixelsPerKilometer, Color lineColor)
         {
             Location headquarters = new Location(0, 0);
             Location currentLocation = headquarters;
@@ -115,12 +146,12 @@ namespace TravelingAssemblyMen.Model
             {
                 Location nextCustomer = _customersAssigned[taskIndex];
 
-                currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer);
+                currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, lineColor);
 
                 currentLocation = nextCustomer;
             }
 
-            currentLocation.DrawLineTo(headquarters, graphics, origin, pixelsPerKilometer);
+            currentLocation.DrawLineTo(headquarters, graphics, origin, pixelsPerKilometer, lineColor);
         }
 
         /// <summary>

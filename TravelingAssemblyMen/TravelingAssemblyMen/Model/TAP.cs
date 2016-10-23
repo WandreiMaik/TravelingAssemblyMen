@@ -71,15 +71,14 @@ namespace TravelingAssemblyMen.Model
         {
             _solution.SolveRandomly();
         }
-
-        public void PaintPanel(object sender, PaintEventArgs e)
+        public void SolveGreedy()
         {
-            e.Graphics.DrawEllipse(new System.Drawing.Pen(new System.Drawing.SolidBrush(System.Drawing.Color.Red)), new System.Drawing.Rectangle(20, 20, 200, 200));
+            _solution.SolveGreedy();
         }
 
         public void DrawSolution(Graphics graphics, Position origin, Double pixelsPerKilometer)
         {
-
+            ColorPicker.Reset();
             _solution.DrawSolution(graphics, origin, pixelsPerKilometer);
         }
 

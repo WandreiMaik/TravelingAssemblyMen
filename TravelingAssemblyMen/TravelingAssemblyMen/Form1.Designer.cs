@@ -32,11 +32,11 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBoxManageTAP = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonGenerateTAP = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.numericCustomercount = new System.Windows.Forms.NumericUpDown();
             this.numericAssemblercount = new System.Windows.Forms.NumericUpDown();
+            this.buttonGenerateTAP = new System.Windows.Forms.Button();
             this.buttonOpenTAP = new System.Windows.Forms.Button();
             this.buttonSaveTAP = new System.Windows.Forms.Button();
             this.groupBoxSolveTAP = new System.Windows.Forms.GroupBox();
@@ -137,20 +137,6 @@
             this.tableLayoutPanel2.Size = new System.Drawing.Size(324, 102);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
-            // buttonGenerateTAP
-            // 
-            this.buttonGenerateTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonGenerateTAP.AutoSize = true;
-            this.tableLayoutPanel2.SetColumnSpan(this.buttonGenerateTAP, 2);
-            this.buttonGenerateTAP.Location = new System.Drawing.Point(5, 39);
-            this.buttonGenerateTAP.Margin = new System.Windows.Forms.Padding(5);
-            this.buttonGenerateTAP.Name = "buttonGenerateTAP";
-            this.buttonGenerateTAP.Size = new System.Drawing.Size(150, 24);
-            this.buttonGenerateTAP.TabIndex = 0;
-            this.buttonGenerateTAP.Text = "Generate TAP";
-            this.buttonGenerateTAP.UseVisualStyleBackColor = true;
-            this.buttonGenerateTAP.Click += new System.EventHandler(this.buttonGenerateTAP_Click);
-            // 
             // label3
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -221,6 +207,20 @@
             0});
             this.numericAssemblercount.ValueChanged += new System.EventHandler(this.numericAssemblercount_ValueChanged);
             // 
+            // buttonGenerateTAP
+            // 
+            this.buttonGenerateTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonGenerateTAP.AutoSize = true;
+            this.tableLayoutPanel2.SetColumnSpan(this.buttonGenerateTAP, 2);
+            this.buttonGenerateTAP.Location = new System.Drawing.Point(5, 39);
+            this.buttonGenerateTAP.Margin = new System.Windows.Forms.Padding(5);
+            this.buttonGenerateTAP.Name = "buttonGenerateTAP";
+            this.buttonGenerateTAP.Size = new System.Drawing.Size(150, 24);
+            this.buttonGenerateTAP.TabIndex = 0;
+            this.buttonGenerateTAP.Text = "Generate TAP";
+            this.buttonGenerateTAP.UseVisualStyleBackColor = true;
+            this.buttonGenerateTAP.Click += new System.EventHandler(this.buttonGenerateTAP_Click);
+            // 
             // buttonOpenTAP
             // 
             this.buttonOpenTAP.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -287,6 +287,7 @@
             this.buttonSolveGreedy.TabIndex = 0;
             this.buttonSolveGreedy.Text = "Greedy Solution";
             this.buttonSolveGreedy.UseVisualStyleBackColor = true;
+            this.buttonSolveGreedy.Click += new System.EventHandler(this.buttonSolveGreedy_Click);
             // 
             // buttonSolveRandomly
             // 

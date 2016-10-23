@@ -86,11 +86,17 @@ namespace TravelingAssemblyMen.Model
 
                 _position.y = value;
             }
-        } 
+        }
         #endregion
 
+        #region Utility
         public Double DistanceTo(Location other)
         {
+            if (other == null)
+            {
+                return Double.MaxValue;
+            }
+
             return DistanceTo(other._X, other._Y);
         }
 
@@ -102,10 +108,11 @@ namespace TravelingAssemblyMen.Model
             return Math.Sqrt(Math.Pow(diffX, 2) + Math.Pow(diffY, 2));
         }
 
-        public override String ToString()
+        public override String ToString() 
         {
             return "(" + _position.x + ";" + _position.y + ")";
         }
+        #endregion
 
         #region Graphics
         public void Draw(Graphics graphics, Position origin, Double pixelsPerKilometer)
@@ -118,12 +125,17 @@ namespace TravelingAssemblyMen.Model
             graphics.FillEllipse(new SolidBrush(color), (float)(_X * pixelsPerKilometer + origin.x - 4), (float)(_Y * pixelsPerKilometer + origin.y - 4), 8, 8);
         }
 
-        public void DrawLineTo(Location nextCustomer, Graphics graphics, Position origin, Double pixelsPerKilometer)
+        public void DrawLineTo(Location nextCustomer, Graphics graphics, Position origin, Double pixelsPerKilometer, Color lineColor)
         {
             Point pointThisCustomer = new Point(Convert.ToInt32(Math.Round(_X * pixelsPerKilometer + origin.x)), Convert.ToInt32(Math.Round(_Y * pixelsPerKilometer + origin.y)));
             Point pointNextCustomer = new Point(Convert.ToInt32(Math.Round(nextCustomer._X * pixelsPerKilometer + origin.x)), Convert.ToInt32(Math.Round(nextCustomer._Y * pixelsPerKilometer + origin.y)));
-            
-            graphics.DrawLine(new Pen(Color.Black), pointThisCustomer, pointNextCustomer);
+
+            graphics.DrawLine(new Pen(lineColor), pointThisCustomer, pointNextCustomer);
+        }
+
+        public void DrawLineTo(Location nextCustomer, Graphics graphics, Position origin, Double pixelsPerKilometer)
+        {
+            DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, Color.Black);
         } 
         #endregion
 

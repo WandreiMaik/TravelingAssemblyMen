@@ -15,7 +15,15 @@ namespace TravelingAssemblyMen.Model
         /// </summary>
         private Dictionary<Location, Int32> _taskDistribution;
         private List<Location> _customerList;
+        private List<Location> _unassignedCustomers;
         private List<Assembler> _assemblerList;
+        private Location[] startingLocations =
+            {
+                new Location(-50, -50),
+                new Location(50, 50),
+                new Location(-50, 50),
+                new Location(50, -50)
+            };
 
         public Int32 NumberOfAssembler
         {
@@ -29,22 +37,24 @@ namespace TravelingAssemblyMen.Model
         {
             _taskDistribution = new Dictionary<Location, Int32>();
             _customerList = customerList.ToList<Location>();
+            _unassignedCustomers = customerList.ToList<Location>();
             _assemblerList = new List<Assembler>();
 
-            while (_assemblerList.Count < assemblerCount)
+            for (int index = 0; index < assemblerCount; index++)
             {
+                if (index < startingLocations.Count())
+                {
+                    _assemblerList.Add(new Assembler(startingLocations[index]));
+                    continue;
+                }
+
                 _assemblerList.Add(new Assembler());
             }
         }
 
         public void SolveRandomly()
         {
-            _taskDistribution.Clear();
-            
-            foreach (Assembler worker in _assemblerList)
-            {
-                worker.RemoveEveryTask();
-            }
+            ResetSolution();
 
             foreach (Location customer in _customerList)
             {
@@ -52,6 +62,35 @@ namespace TravelingAssemblyMen.Model
 
                 _taskDistribution.Add(customer, assembler);
                 _assemblerList[assembler].AcceptTask(customer, CustomerInsertStyle.Random);
+                _unassignedCustomers.Remove(customer);
+            }
+        }
+
+        public void SolveGreedy()
+        {
+            ResetSolution();
+            
+            Assembler currentAssembler;
+
+            //asign first customer to each assembler corresponding to their starting positions
+            for (int assemblerIndex = 0; assemblerIndex < _assemblerList.Count; assemblerIndex++)
+            {
+                if (_customerList.Count > assemblerIndex)
+                {
+                    currentAssembler = _assemblerList[assemblerIndex];
+                    AssignTask(FindClosestUnassigned(currentAssembler.StartingPosition), currentAssembler);
+                }
+            }
+
+            int roundRobin = 0;
+
+            while (_unassignedCustomers.Count > 0)
+            {
+                currentAssembler = _assemblerList[roundRobin];
+
+                AssignTask(FindClosestUnassigned(currentAssembler.LastCustomer), currentAssembler);
+
+                roundRobin = (roundRobin + 1) % _assemblerList.Count;
             }
         }
 
@@ -69,10 +108,7 @@ namespace TravelingAssemblyMen.Model
             fitness += overallWorkload * overallWorkloadWeight;
 
             // kill every solution with customers that nobody worked at
-            Dictionary<Location, Int32>.KeyCollection processedTasks = _taskDistribution.Keys;
-            List<Location> forgottenCustomers = _customerList.Except(processedTasks).ToList();
-
-            if (forgottenCustomers.Count > 0)
+            if (_unassignedCustomers.Count > 0)
             {
                 return Double.MaxValue;
             }
@@ -82,15 +118,48 @@ namespace TravelingAssemblyMen.Model
 
         internal void DrawSolution(Graphics graphics, Position origin, Double pixelsPerKilometer)
         {
+            foreach (Assembler worker in _assemblerList)
+            {
+                worker.Draw(graphics, origin, pixelsPerKilometer, ColorPicker.NextColor);
+            }
+
             foreach (Location customer in _customerList)
             {
                 customer.Draw(graphics, origin, pixelsPerKilometer);
             }
+        }
 
+        private void ResetSolution()
+        {
+            _taskDistribution.Clear();
+            _unassignedCustomers = _customerList.ToList<Location>();
+            
             foreach (Assembler worker in _assemblerList)
             {
-                worker.Draw(graphics, origin, pixelsPerKilometer);
+                worker.RemoveEveryTask();
             }
+        }
+
+        private Location FindClosestUnassigned(Location customer)
+        {
+            Location closestNeighbor = null;
+
+            foreach (Location newNeighbor in _unassignedCustomers)
+            {
+                if (newNeighbor.DistanceTo(customer) < customer.DistanceTo(closestNeighbor))
+                {
+                    closestNeighbor = newNeighbor;
+                }
+            }
+
+            return closestNeighbor;
+        }
+
+        private void AssignTask(Location customer, Assembler worker)
+        {
+            worker.AcceptTask(customer);
+            _unassignedCustomers.Remove(customer);
+            _taskDistribution.Add(customer, _assemblerList.IndexOf(worker));
         }
     }
 }
