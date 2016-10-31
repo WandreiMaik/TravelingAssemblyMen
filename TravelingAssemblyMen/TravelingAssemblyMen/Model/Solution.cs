@@ -22,7 +22,11 @@ namespace TravelingAssemblyMen.Model
                 new Location(-50, -50),
                 new Location(50, 50),
                 new Location(-50, 50),
-                new Location(50, -50)
+                new Location(50, -50),
+                new Location(0, -25),
+                new Location(0, 25),
+                new Location(25, 0),
+                new Location(-25, 0)
             };
 
         public Int32 NumberOfAssembler

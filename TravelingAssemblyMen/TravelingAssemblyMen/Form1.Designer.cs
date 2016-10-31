@@ -73,9 +73,9 @@
             // mainLayoutPanel
             // 
             this.mainLayoutPanel.ColumnCount = 3;
-            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.mainLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainLayoutPanel.Controls.Add(this.flowLayoutPanel1, 0, 0);
             this.mainLayoutPanel.Controls.Add(this.panelSolvedGraph, 1, 0);
             this.mainLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -84,7 +84,7 @@
             this.mainLayoutPanel.RowCount = 2;
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainLayoutPanel.Size = new System.Drawing.Size(1041, 695);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(1350, 1003);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -97,7 +97,7 @@
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 341);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 495);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // groupBoxManageTAP
@@ -426,7 +426,7 @@
             this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
             this.panelSolvedGraph.Name = "panelSolvedGraph";
             this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Size = new System.Drawing.Size(688, 689);
+            this.panelSolvedGraph.Size = new System.Drawing.Size(997, 997);
             this.panelSolvedGraph.TabIndex = 3;
             this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
             // 
@@ -444,7 +444,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1041, 695);
+            this.ClientSize = new System.Drawing.Size(1350, 1003);
             this.Controls.Add(this.mainLayoutPanel);
             this.Name = "Form1";
             this.Text = "Form1";
