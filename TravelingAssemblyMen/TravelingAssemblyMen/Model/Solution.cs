@@ -147,12 +147,16 @@ namespace TravelingAssemblyMen.Model
         private Location FindClosestUnassigned(Location customer)
         {
             Location closestNeighbor = null;
+            Double closestNeighborDistance = Double.MaxValue;
 
             foreach (Location newNeighbor in _unassignedCustomers)
             {
-                if (newNeighbor.DistanceTo(customer) < customer.DistanceTo(closestNeighbor))
+                Double newNeighborDistance = customer.DistanceTo(newNeighbor);
+
+                if (newNeighborDistance < closestNeighborDistance)
                 {
                     closestNeighbor = newNeighbor;
+                    closestNeighborDistance = newNeighborDistance;
                 }
             }
 
