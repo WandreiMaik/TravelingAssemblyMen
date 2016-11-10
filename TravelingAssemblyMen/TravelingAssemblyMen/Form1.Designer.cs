@@ -92,7 +92,7 @@
             this.mainLayoutPanel.RowCount = 2;
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainLayoutPanel.Size = new System.Drawing.Size(845, 498);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(946, 599);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -107,7 +107,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.mainLayoutPanel.SetRowSpan(this.flowLayoutPanel1, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 492);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 593);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // groupBoxManageTAP
@@ -391,7 +391,7 @@
             this.groupBox2.Size = new System.Drawing.Size(330, 51);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "FItness";
+            this.groupBox2.Text = "Fitness";
             // 
             // tableLayoutPanel4
             // 
@@ -436,7 +436,7 @@
             this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
             this.panelSolvedGraph.Name = "panelSolvedGraph";
             this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Size = new System.Drawing.Size(492, 492);
+            this.panelSolvedGraph.Size = new System.Drawing.Size(593, 593);
             this.panelSolvedGraph.TabIndex = 3;
             this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
             // 
@@ -459,7 +459,7 @@
             this.groupBox3.Size = new System.Drawing.Size(330, 87);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
+            this.groupBox3.Text = "Local Optimisation";
             // 
             // tableLayoutPanel5
             // 
@@ -530,10 +530,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 498);
+            this.ClientSize = new System.Drawing.Size(946, 599);
             this.Controls.Add(this.mainLayoutPanel);
+            this.MinimumSize = new System.Drawing.Size(807, 483);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.mainLayoutPanel.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();

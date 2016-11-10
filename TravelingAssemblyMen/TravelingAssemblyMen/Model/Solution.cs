@@ -194,40 +194,59 @@ namespace TravelingAssemblyMen.Model
                     for (int customerindex = -1; customerindex < worker.CustomersAssigned; customerindex++)
                     {
                         bool foundCandidate = false;
-                        int candidateIndex = -1;
+                        Location candidate = null;
                         Double fitnessDelta = 0;
 
-                        for (int neighborIndex = 1; neighborIndex <= neighborhoodRange; neighborIndex++)
+                        for (int neighborOffset = 1; neighborOffset <= neighborhoodRange; neighborOffset++)
                         {
-                            if (customerindex + 1 + neighborIndex + 1 > worker.CustomersAssigned)
+                            if (customerindex + 1 + neighborOffset + 1 > worker.CustomersAssigned)
                             {
                                 break;
                             }
 
                             Location piOfI = worker.CustomerAtPosition(customerindex);
                             Location piOfIPlusOne = worker.CustomerAtPosition(customerindex + 1);
-                            Location piOfJ = worker.CustomerAtPosition(customerindex + 1 + neighborIndex);
-                            Location piOfJPlusOne = worker.CustomerAtPosition(customerindex + 1 + neighborIndex + 1);
+                            Location piOfJ = worker.FindNeighbor(piOfI, neighborOffset);
+                            Location piOfJPlusOne = worker.CustomerAfter(piOfJ);
 
                             Double newFitnessDelta = Assembler.FitnessDelta(piOfI, piOfIPlusOne, piOfJ, piOfJPlusOne);
 
                             if (newFitnessDelta < fitnessDelta)
                             {
                                 fitnessDelta = newFitnessDelta;
-                                candidateIndex = customerindex + 1 + neighborIndex;
+                                candidate = piOfJ;
                                 foundCandidate = true;
                             }
                         }
 
                         if (foundCandidate)
                         {
-                            worker.InvertOrder(customerindex + 1, candidateIndex);
+                            worker.InvertOrder(worker.CustomerAtPosition(customerindex + 1), candidate);
                             madeChange = true;
                         }
                     }
                 }
                 while (madeChange);
             }
+        }
+
+        /// <summary>
+        /// Returns the nth next customer in the assigned customers towards the parameter customer. 
+        /// Beware that the offset 0 will result in the customer itself if it is in the list of customers;
+        /// </summary>
+        /// <param name="customer">The customers who's next neighbors are looked up.</param>
+        /// <param name="offset">The offset how close the neighbor should be in the ranking.</param>
+        /// <returns>The neighbor with an offset in the ranking.</returns>
+        private Location FindGlobalNeighbor(Location customer, Int32 offset)
+        {
+            List<Location> ranking = _customerList.OrderBy(l=>l.DistanceTo(customer)).ToList();
+
+            if (offset >= ranking.Count)
+            {
+                ranking.Last();
+            }
+
+            return ranking[offset];
         }
 
         private void AssignTask(Location customer, Assembler worker)

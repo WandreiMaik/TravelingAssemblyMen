@@ -145,5 +145,18 @@ namespace TravelingAssemblyMen
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
+
+        private void Form1_ResizeEnd(object sender, EventArgs e)
+        {
+            if (panelSolvedGraph.Width > panelSolvedGraph.Height)
+            {
+                this.Width -= panelSolvedGraph.Width - panelSolvedGraph.Height;
+                panelSolvedGraph.Invalidate();
+                return;
+            }
+
+            this.Height -= panelSolvedGraph.Height - panelSolvedGraph.Width;
+            panelSolvedGraph.Invalidate();
+        }
     }
 }

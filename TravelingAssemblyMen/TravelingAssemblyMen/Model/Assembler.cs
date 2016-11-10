@@ -111,8 +111,11 @@ namespace TravelingAssemblyMen.Model
             _workloadIsDirty = true;
         }
         
-        public void InvertOrder(int startIndex, int endIndex)
+        public void InvertOrder(Location firstReversed, Location lastReversed)
         {
+            Int32 startIndex = _customersAssigned.IndexOf(firstReversed);
+            Int32 endIndex = _customersAssigned.IndexOf(lastReversed);
+
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
             _workloadIsDirty = true;
         }
@@ -125,6 +128,25 @@ namespace TravelingAssemblyMen.Model
             }
 
             return _customersAssigned[index];
+        }
+
+        /// <summary>
+        /// Returns the nth next customer in the assigned customers towards the parameter customer. 
+        /// Beware that if the customer is asigned the offset 0 will result in the customer itself;
+        /// </summary>
+        /// <param name="customer">The customers who's next neighbors are looked up.</param>
+        /// <param name="offset">The offset how close the neighbor should be in the ranking.</param>
+        /// <returns>The neighbor with an offset in the ranking.</returns>
+        public Location FindNeighbor(Location customer, Int32 offset)
+        {
+            List<Location> ranking = _customersAssigned.OrderBy(l => l.DistanceTo(customer)).ToList();
+
+            if (offset >= ranking.Count)
+            {
+                return ranking.Last();
+            }
+
+            return ranking[offset];
         }
 
         public static Double FitnessDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
@@ -211,6 +233,13 @@ namespace TravelingAssemblyMen.Model
             _workload += timeToHome;
 
             _workloadIsDirty = false;
+        }
+
+        public Location CustomerAfter(Location customer)
+        {
+            int indexOfCustomer = _customersAssigned.IndexOf(customer);
+
+            return CustomerAtPosition(indexOfCustomer + 1);
         }
     }
 }
