@@ -8,7 +8,6 @@ namespace TravelingAssemblyMen.Enums
 {
     public enum CustomerInsertStyle
     {
-        Efficient,
         Random,
         Append
     }

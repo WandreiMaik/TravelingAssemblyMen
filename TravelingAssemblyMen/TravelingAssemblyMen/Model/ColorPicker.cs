@@ -18,7 +18,7 @@ namespace TravelingAssemblyMen.Model
             Color.Orange,
             Color.Black,
             Color.DarkCyan,
-            Color.Khaki
+            Color.Gray
         };
 
         private static int colorIndex = 0;

@@ -147,7 +147,15 @@ namespace TravelingAssemblyMen.Model
 
                 return new TAP(numberOfAssemblers, customers);
             }
-        } 
+        }
+
+        internal void LocalOptimisation(LocalOptimisationStyle style, int neighborhoodRange)
+        {
+            if (style == LocalOptimisationStyle.TwoOpt)
+            {
+                _solution.TwoOpt(neighborhoodRange);
+            }
+        }
         #endregion
     }
 }

@@ -17,6 +17,7 @@ namespace TravelingAssemblyMen.Model
         const float leftHorizontalBound = -50;
         const float upperVerticalBound = 50;
         const float lowerVerticalBound = -50;
+        internal static readonly Location HQ = new Location(0, 0);
         #endregion
 
         #region Constructors

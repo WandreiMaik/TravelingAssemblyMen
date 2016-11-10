@@ -54,12 +54,21 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
+        public Int32 CustomersAssigned
+        {
+            get
+            {
+                return _customersAssigned.Count;
+            }
+        }
+
         public Assembler()
         {
             _customersAssigned = new List<Location>();
             _workload = 0;
             _workloadIsDirty = true;
         }
+
         public Assembler(Location startingPosition) : this()
         {
             _startingPosition = startingPosition;
@@ -67,7 +76,7 @@ namespace TravelingAssemblyMen.Model
 
         public void AcceptTask(Location newCustomer)
         {
-            _InsertEfficiently(newCustomer);
+            _InsertAppending(newCustomer);
             _workloadIsDirty = true;
         }
 
@@ -87,13 +96,6 @@ namespace TravelingAssemblyMen.Model
                 return;
             }
 
-            if (style == CustomerInsertStyle.Efficient)
-            {
-                _InsertEfficiently(newCustomer);
-                _workloadIsDirty = true;
-                return;
-            }
-
             AcceptTask(newCustomer);
         }
 
@@ -109,25 +111,37 @@ namespace TravelingAssemblyMen.Model
             _workloadIsDirty = true;
         }
         
+        public void InvertOrder(int startIndex, int endIndex)
+        {
+            _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
+            _workloadIsDirty = true;
+        }
+
+        public Location CustomerAtPosition(int index)
+        {
+            if (index == -1 || index == _customersAssigned.Count)
+            {
+                return Location.HQ;
+            }
+
+            return _customersAssigned[index];
+        }
+
+        public static Double FitnessDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
+        {
+            Double fitnessDelta = 0;
+
+            fitnessDelta -= piOfI.DistanceTo(piOfIPlusOne) + piOfJ.DistanceTo(piOfJPlusOne);
+            fitnessDelta += piOfI.DistanceTo(piOfJ) + piOfIPlusOne.DistanceTo(piOfJPlusOne);
+
+            return fitnessDelta;
+        }
+
         /// <summary>
         /// Inserts a new customer at the end
         /// </summary>
         /// <param name="newCustomer">The new customer that needs to be accepted into the assigned customer list and put into place.</param>
         private void _InsertAppending(Location newCustomer)
-        {
-            if (_customersAssigned.Contains(newCustomer))
-            {
-                return;
-            }
-
-            _customersAssigned.Add(newCustomer);
-        }
-
-        /// <summary>
-        /// Inserts a new customer into the most efficient position
-        /// </summary>
-        /// <param name="newCustomer">The new customer that needs to be accepted into the assigned customer list and put into place.</param>
-        private void _InsertEfficiently(Location newCustomer)
         {
             if (_customersAssigned.Contains(newCustomer))
             {

@@ -16,7 +16,7 @@ namespace TravelingAssemblyMen.Model
         private Dictionary<Location, Int32> _taskDistribution;
         private List<Location> _customerList;
         private List<Location> _unassignedCustomers;
-        private List<Assembler> _assemblerList;
+        private List<Assembler> _team;
         private Location[] startingLocations =
             {
                 new Location(-50, -50),
@@ -33,7 +33,7 @@ namespace TravelingAssemblyMen.Model
         {
             get
             {
-                return _assemblerList.Count;
+                return _team.Count;
             }
         }
 
@@ -42,17 +42,17 @@ namespace TravelingAssemblyMen.Model
             _taskDistribution = new Dictionary<Location, Int32>();
             _customerList = customerList.ToList<Location>();
             _unassignedCustomers = customerList.ToList<Location>();
-            _assemblerList = new List<Assembler>();
+            _team = new List<Assembler>();
 
             for (int index = 0; index < assemblerCount; index++)
             {
                 if (index < startingLocations.Count())
                 {
-                    _assemblerList.Add(new Assembler(startingLocations[index]));
+                    _team.Add(new Assembler(startingLocations[index]));
                     continue;
                 }
 
-                _assemblerList.Add(new Assembler());
+                _team.Add(new Assembler());
             }
         }
 
@@ -62,10 +62,10 @@ namespace TravelingAssemblyMen.Model
 
             foreach (Location customer in _customerList)
             {
-                Int32 assembler = MyRNG.Next(_assemblerList.Count);
+                Int32 assembler = MyRNG.Next(_team.Count);
 
                 _taskDistribution.Add(customer, assembler);
-                _assemblerList[assembler].AcceptTask(customer, CustomerInsertStyle.Random);
+                _team[assembler].AcceptTask(customer, CustomerInsertStyle.Random);
                 _unassignedCustomers.Remove(customer);
             }
         }
@@ -77,11 +77,11 @@ namespace TravelingAssemblyMen.Model
             Assembler currentAssembler;
 
             //asign first customer to each assembler corresponding to their starting positions
-            for (int assemblerIndex = 0; assemblerIndex < _assemblerList.Count; assemblerIndex++)
+            for (int assemblerIndex = 0; assemblerIndex < _team.Count; assemblerIndex++)
             {
                 if (_customerList.Count > assemblerIndex)
                 {
-                    currentAssembler = _assemblerList[assemblerIndex];
+                    currentAssembler = _team[assemblerIndex];
                     AssignTask(FindClosestUnassigned(currentAssembler.StartingPosition), currentAssembler);
                 }
             }
@@ -90,11 +90,11 @@ namespace TravelingAssemblyMen.Model
 
             while (_unassignedCustomers.Count > 0)
             {
-                currentAssembler = _assemblerList[roundRobin];
+                currentAssembler = _team[roundRobin];
 
-                AssignTask(FindClosestUnassigned(currentAssembler.LastCustomer), currentAssembler);
+                AssignTask(FindClosestUnassigned(currentAssembler.LastCustomer, currentAssembler.StartingPosition), currentAssembler);
 
-                roundRobin = (roundRobin + 1) % _assemblerList.Count;
+                roundRobin = (roundRobin + 1) % _team.Count;
             }
         }
 
@@ -103,7 +103,7 @@ namespace TravelingAssemblyMen.Model
             Double fitness = 0;
             Double overallWorkload = 0;
 
-            foreach (Assembler worker in _assemblerList)
+            foreach (Assembler worker in _team)
             {
                 overallWorkload += worker.Workload;
                 fitness += worker.Workload + Math.Max((worker.Workload - 8) * overtimePenaltyWeight, 0);
@@ -122,7 +122,7 @@ namespace TravelingAssemblyMen.Model
 
         internal void DrawSolution(Graphics graphics, Position origin, Double pixelsPerKilometer)
         {
-            foreach (Assembler worker in _assemblerList)
+            foreach (Assembler worker in _team)
             {
                 worker.Draw(graphics, origin, pixelsPerKilometer, ColorPicker.NextColor);
             }
@@ -138,12 +138,11 @@ namespace TravelingAssemblyMen.Model
             _taskDistribution.Clear();
             _unassignedCustomers = _customerList.ToList<Location>();
             
-            foreach (Assembler worker in _assemblerList)
+            foreach (Assembler worker in _team)
             {
                 worker.RemoveEveryTask();
             }
         }
-
         private Location FindClosestUnassigned(Location customer)
         {
             Location closestNeighbor = null;
@@ -163,11 +162,79 @@ namespace TravelingAssemblyMen.Model
             return closestNeighbor;
         }
 
+        private Location FindClosestUnassigned(Location customer, Location startingPosition)
+        {
+            Location closestNeighbor = null;
+            Double closestNeighborDistance = Double.MaxValue;
+
+            foreach (Location newNeighbor in _unassignedCustomers)
+            {
+                Double newNeighborDistance = customer.DistanceTo(newNeighbor) + startingPosition.DistanceTo(newNeighbor);
+
+                if (newNeighborDistance < closestNeighborDistance)
+                {
+                    closestNeighbor = newNeighbor;
+                    closestNeighborDistance = newNeighborDistance;
+                }
+            }
+
+            return closestNeighbor;
+        }
+
+        public void TwoOpt(int neighborhoodRange)
+        {
+            foreach(Assembler worker in _team)
+            {
+                bool madeChange;
+
+                do
+                {
+                    madeChange = false;
+
+                    for (int customerindex = -1; customerindex < worker.CustomersAssigned; customerindex++)
+                    {
+                        bool foundCandidate = false;
+                        int candidateIndex = -1;
+                        Double fitnessDelta = 0;
+
+                        for (int neighborIndex = 1; neighborIndex <= neighborhoodRange; neighborIndex++)
+                        {
+                            if (customerindex + 1 + neighborIndex + 1 > worker.CustomersAssigned)
+                            {
+                                break;
+                            }
+
+                            Location piOfI = worker.CustomerAtPosition(customerindex);
+                            Location piOfIPlusOne = worker.CustomerAtPosition(customerindex + 1);
+                            Location piOfJ = worker.CustomerAtPosition(customerindex + 1 + neighborIndex);
+                            Location piOfJPlusOne = worker.CustomerAtPosition(customerindex + 1 + neighborIndex + 1);
+
+                            Double newFitnessDelta = Assembler.FitnessDelta(piOfI, piOfIPlusOne, piOfJ, piOfJPlusOne);
+
+                            if (newFitnessDelta < fitnessDelta)
+                            {
+                                fitnessDelta = newFitnessDelta;
+                                candidateIndex = customerindex + 1 + neighborIndex;
+                                foundCandidate = true;
+                            }
+                        }
+
+                        if (foundCandidate)
+                        {
+                            worker.InvertOrder(customerindex + 1, candidateIndex);
+                            madeChange = true;
+                        }
+                    }
+                }
+                while (madeChange);
+            }
+        }
+
         private void AssignTask(Location customer, Assembler worker)
         {
             worker.AcceptTask(customer);
             _unassignedCustomers.Remove(customer);
-            _taskDistribution.Add(customer, _assemblerList.IndexOf(worker));
+            _taskDistribution.Add(customer, _team.IndexOf(worker));
         }
     }
 }

@@ -24,6 +24,11 @@ namespace TravelingAssemblyMen
             InitializeComponent();
         }
 
+        private void UpdateFitness()
+        {
+            labelFitnessValue.Text = _problem.FitnessValue(_overtimePenaltyWeight, _overallWorkdloadWeight);
+        }
+
         private void buttonGenerateTAP_Click(object sender, EventArgs e)
         {
             _problem = new TAP(_assemblerCountInput, _customerCountInput);
@@ -68,7 +73,7 @@ namespace TravelingAssemblyMen
         {
             _problem.SolveRandomly();
             panelSolvedGraph.Invalidate();
-            labelFitnessValue.Text = _problem.FitnessValue(_overtimePenaltyWeight, _overallWorkdloadWeight);
+            UpdateFitness();
         }
 
         private void textBoxOvertimePenalty_TextChanged(object sender, EventArgs e)
@@ -131,7 +136,14 @@ namespace TravelingAssemblyMen
         {
             _problem.SolveGreedy();
             panelSolvedGraph.Invalidate();
-            labelFitnessValue.Text = _problem.FitnessValue(_overtimePenaltyWeight, _overallWorkdloadWeight);
+            UpdateFitness();
+        }
+
+        private void button2Opt_Click(object sender, EventArgs e)
+        {
+            _problem.LocalOptimisation(LocalOptimisationStyle.TwoOpt, (int)numericUpDownNeighborhoodRange.Value);
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
         }
     }
 }
