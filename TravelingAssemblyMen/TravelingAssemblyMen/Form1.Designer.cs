@@ -49,6 +49,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxOvertimePenalty = new System.Windows.Forms.TextBox();
             this.textBoxOverallWorkload = new System.Windows.Forms.TextBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.button2Opt = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFitness = new System.Windows.Forms.Label();
@@ -56,11 +61,6 @@
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.button2Opt = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -71,11 +71,11 @@
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeighborhoodRange)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainLayoutPanel
@@ -382,74 +382,6 @@
             this.textBoxOverallWorkload.Text = "1,0";
             this.textBoxOverallWorkload.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
             // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.tableLayoutPanel4);
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(3, 361);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(330, 51);
-            this.groupBox2.TabIndex = 3;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Fitness";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.69136F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.30864F));
-            this.tableLayoutPanel4.Controls.Add(this.labelFitness, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.labelFitnessValue, 1, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(324, 32);
-            this.tableLayoutPanel4.TabIndex = 0;
-            // 
-            // labelFitness
-            // 
-            this.labelFitness.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.labelFitness.AutoSize = true;
-            this.labelFitness.Location = new System.Drawing.Point(5, 9);
-            this.labelFitness.Name = "labelFitness";
-            this.labelFitness.Size = new System.Drawing.Size(69, 13);
-            this.labelFitness.TabIndex = 1;
-            this.labelFitness.Text = "Fitnessvalue:";
-            // 
-            // labelFitnessValue
-            // 
-            this.labelFitnessValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.labelFitnessValue.AutoSize = true;
-            this.labelFitnessValue.Location = new System.Drawing.Point(83, 9);
-            this.labelFitnessValue.Name = "labelFitnessValue";
-            this.labelFitnessValue.Size = new System.Drawing.Size(13, 13);
-            this.labelFitnessValue.TabIndex = 2;
-            this.labelFitnessValue.Text = "0";
-            // 
-            // panelSolvedGraph
-            // 
-            this.panelSolvedGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mainLayoutPanel.SetColumnSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
-            this.panelSolvedGraph.Name = "panelSolvedGraph";
-            this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Size = new System.Drawing.Size(593, 593);
-            this.panelSolvedGraph.TabIndex = 3;
-            this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
-            // 
-            // saveFileDialog
-            // 
-            this.saveFileDialog.Filter = "Txt files|*.txt|All files|*.*";
-            this.saveFileDialog.Title = "TAP";
-            // 
-            // openFileDialog
-            // 
-            this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
-            this.openFileDialog.Title = "TAP";
-            // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.tableLayoutPanel5);
@@ -526,6 +458,74 @@
             0,
             0});
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.tableLayoutPanel4);
+            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBox2.Location = new System.Drawing.Point(3, 361);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(330, 51);
+            this.groupBox2.TabIndex = 3;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Fitness";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 24.69136F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 75.30864F));
+            this.tableLayoutPanel4.Controls.Add(this.labelFitness, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.labelFitnessValue, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(324, 32);
+            this.tableLayoutPanel4.TabIndex = 0;
+            // 
+            // labelFitness
+            // 
+            this.labelFitness.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.labelFitness.AutoSize = true;
+            this.labelFitness.Location = new System.Drawing.Point(5, 9);
+            this.labelFitness.Name = "labelFitness";
+            this.labelFitness.Size = new System.Drawing.Size(69, 13);
+            this.labelFitness.TabIndex = 1;
+            this.labelFitness.Text = "Fitnessvalue:";
+            // 
+            // labelFitnessValue
+            // 
+            this.labelFitnessValue.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.labelFitnessValue.AutoSize = true;
+            this.labelFitnessValue.Location = new System.Drawing.Point(83, 9);
+            this.labelFitnessValue.Name = "labelFitnessValue";
+            this.labelFitnessValue.Size = new System.Drawing.Size(13, 13);
+            this.labelFitnessValue.TabIndex = 2;
+            this.labelFitnessValue.Text = "0";
+            // 
+            // panelSolvedGraph
+            // 
+            this.panelSolvedGraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainLayoutPanel.SetColumnSpan(this.panelSolvedGraph, 2);
+            this.panelSolvedGraph.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
+            this.panelSolvedGraph.Name = "panelSolvedGraph";
+            this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
+            this.panelSolvedGraph.Size = new System.Drawing.Size(593, 593);
+            this.panelSolvedGraph.TabIndex = 3;
+            this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
+            // 
+            // saveFileDialog
+            // 
+            this.saveFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            this.saveFileDialog.Title = "TAP";
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
+            this.openFileDialog.Title = "TAP";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -551,13 +551,13 @@
             this.groupBox1.PerformLayout();
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeighborhoodRange)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
 
         }

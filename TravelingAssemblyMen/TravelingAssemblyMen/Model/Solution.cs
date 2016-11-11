@@ -199,14 +199,15 @@ namespace TravelingAssemblyMen.Model
 
                         for (int neighborOffset = 1; neighborOffset <= neighborhoodRange; neighborOffset++)
                         {
-                            if (customerindex + 1 + neighborOffset + 1 > worker.CustomersAssigned)
+                            Location piOfI = worker.CustomerAtPosition(customerindex);
+                            Location piOfIPlusOne = worker.CustomerAtPosition(customerindex + 1);
+                            Location piOfJ = worker.FindNeighbor(piOfI, neighborOffset);
+
+                            if (piOfJ.Equals(Location.HQ))
                             {
                                 break;
                             }
 
-                            Location piOfI = worker.CustomerAtPosition(customerindex);
-                            Location piOfIPlusOne = worker.CustomerAtPosition(customerindex + 1);
-                            Location piOfJ = worker.FindNeighbor(piOfI, neighborOffset);
                             Location piOfJPlusOne = worker.CustomerAfter(piOfJ);
 
                             Double newFitnessDelta = Assembler.FitnessDelta(piOfI, piOfIPlusOne, piOfJ, piOfJPlusOne);

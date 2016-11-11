@@ -113,9 +113,24 @@ namespace TravelingAssemblyMen.Model
         
         public void InvertOrder(Location firstReversed, Location lastReversed)
         {
+            if (firstReversed.Equals(Location.HQ) && lastReversed.Equals(_customersAssigned.First()))
+            {
+                _customersAssigned.Remove(lastReversed);
+                _customersAssigned.Add(lastReversed);
+                _workloadIsDirty = true;
+                return;
+            }
+
             Int32 startIndex = _customersAssigned.IndexOf(firstReversed);
             Int32 endIndex = _customersAssigned.IndexOf(lastReversed);
 
+            if (startIndex > endIndex)
+            {
+                Int32 helper = startIndex;
+                startIndex = endIndex;
+                endIndex = helper;
+            }
+            
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
             _workloadIsDirty = true;
         }
@@ -182,7 +197,14 @@ namespace TravelingAssemblyMen.Model
             {
                 Location nextCustomer = _customersAssigned[taskIndex];
 
-                currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, lineColor);
+                if (taskIndex == 0)
+                {
+                    currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, Color.Black);
+                }
+                else
+                {
+                    currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, lineColor);
+                }
 
                 currentLocation = nextCustomer;
             }
