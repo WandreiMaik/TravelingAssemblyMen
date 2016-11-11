@@ -113,10 +113,19 @@ namespace TravelingAssemblyMen.Model
         
         public void InvertOrder(Location firstReversed, Location lastReversed)
         {
-            if (firstReversed.Equals(Location.HQ) && lastReversed.Equals(_customersAssigned.First()))
+            if (firstReversed.Equals(Location.HQ))
             {
-                _customersAssigned.Remove(lastReversed);
-                _customersAssigned.Add(lastReversed);
+                List<Location> movedList = _customersAssigned.GetRange(0, _customersAssigned.IndexOf(lastReversed) + 1);
+                
+                foreach (Location customer in movedList)
+                {
+                    _customersAssigned.Remove(customer);
+                }
+
+                movedList.Reverse();
+
+                _customersAssigned.AddRange(movedList);
+
                 _workloadIsDirty = true;
                 return;
             }
