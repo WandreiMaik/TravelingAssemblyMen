@@ -14,8 +14,6 @@ namespace TravelingAssemblyMen
     public partial class Form1 : Form
     {
         private TAP _problem;
-        private Int32 _customerCountInput = 1;
-        private Int32 _assemblerCountInput = 1;
         private Double _overtimePenaltyWeight = 1;
         private Double _overallWorkdloadWeight = 1;
 
@@ -31,22 +29,14 @@ namespace TravelingAssemblyMen
 
         private void buttonGenerateTAP_Click(object sender, EventArgs e)
         {
-            _problem = new TAP(_assemblerCountInput, _customerCountInput);
+            _problem = new TAP((Int32)numericAssemblercount.Value, (Int32)numericCustomercount.Value);
             labelFitnessValue.Text = "0";
             buttonSaveTAP.Enabled = true;
             buttonSolveGreedy.Enabled = true;
             buttonSolveRandomly.Enabled = true;
+            buttonSwap.Enabled = false;
+            button2Opt.Enabled = false;
             panelSolvedGraph.Invalidate();
-        }
-
-        private void numericCustomercount_ValueChanged(object sender, EventArgs e)
-        {
-            _customerCountInput = Decimal.ToInt32(numericCustomercount.Value);
-        }
-
-        private void numericAssemblercount_ValueChanged(object sender, EventArgs e)
-        {
-            _assemblerCountInput = Decimal.ToInt32(numericAssemblercount.Value);
         }
 
         private void panelSolvedGraph_Paint(object sender, PaintEventArgs e)
@@ -72,6 +62,8 @@ namespace TravelingAssemblyMen
         private void buttonSolveRandomly_Click(object sender, EventArgs e)
         {
             _problem.SolveRandomly();
+            buttonSwap.Enabled = true;
+            button2Opt.Enabled = true;
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
@@ -121,6 +113,8 @@ namespace TravelingAssemblyMen
                     buttonSaveTAP.Enabled = true;
                     buttonSolveGreedy.Enabled = true;
                     buttonSolveRandomly.Enabled = true;
+                    buttonSwap.Enabled = false;
+                    button2Opt.Enabled = false;
                     numericAssemblercount.Value = _problem.NumberOfAssembler;
                     numericCustomercount.Value = _problem.NumberOfCustomers;
                     panelSolvedGraph.Invalidate();
@@ -135,6 +129,8 @@ namespace TravelingAssemblyMen
         private void buttonSolveGreedy_Click(object sender, EventArgs e)
         {
             _problem.SolveGreedy();
+            buttonSwap.Enabled = true;
+            button2Opt.Enabled = true;
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
@@ -157,6 +153,13 @@ namespace TravelingAssemblyMen
 
             this.Height -= panelSolvedGraph.Height - panelSolvedGraph.Width;
             panelSolvedGraph.Invalidate();
+        }
+
+        private void buttonSwap_Click(object sender, EventArgs e)
+        {
+            _problem.LocalOptimisation(LocalOptimisationStyle.Swap, (int)numericUpDownNeighborhoodRange.Value);
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
         }
     }
 }

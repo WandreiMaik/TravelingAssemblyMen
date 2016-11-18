@@ -2,6 +2,8 @@
 {
     enum LocalOptimisationStyle
     {
-        TwoOpt
+        TwoOpt,
+        Swap,
+        Insert
     }
 }

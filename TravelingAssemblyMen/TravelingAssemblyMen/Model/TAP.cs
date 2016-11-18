@@ -13,17 +13,13 @@ namespace TravelingAssemblyMen.Model
     {
         private List<Location> _customerList;
         private Solution _solution;
+        private Double[,] _distanceMatrix;
 
         public Int32 NumberOfCustomers
         {
             get
             {
-                if (_customerList != null)
-                {
-                    return _customerList.Count;
-                }
-
-                return 1;
+                return _customerList.Count;
             }
         }
 
@@ -31,12 +27,15 @@ namespace TravelingAssemblyMen.Model
         {
             get
             {
-                if (_solution != null)
-                {
-                    return _solution.NumberOfAssembler;
-                }
-
-                return 1;
+                 return _solution.NumberOfAssembler;
+            }
+        }
+        
+        public List<Location> Customers
+        {
+            get
+            {
+                return _customerList;
             }
         }
 
@@ -57,13 +56,16 @@ namespace TravelingAssemblyMen.Model
                 _customerList.Add(newCustomer);
             }
 
-            _solution = new Solution(_customerList, numberOfAssemblers);
+            CalculateDistanceMatrix();
+
+            _solution = new Solution(this, numberOfAssemblers);
         }
 
         public TAP(Int32 numberOfAssemblers, List<Location> customers)
         {
-            _customerList = customers;
-            _solution = new Solution(_customerList, numberOfAssemblers);
+            _customerList = customers ?? new List<Location>();
+            CalculateDistanceMatrix();
+            _solution = new Solution(this, numberOfAssemblers);
         } 
         #endregion
 
@@ -71,6 +73,7 @@ namespace TravelingAssemblyMen.Model
         {
             _solution.SolveRandomly();
         }
+
         public void SolveGreedy()
         {
             _solution.SolveGreedy();
@@ -85,6 +88,32 @@ namespace TravelingAssemblyMen.Model
         public string FitnessValue(Double overtimePenaltyWeight, Double overallWorkloadWeight)
         {
             return Math.Round(_solution.FitnessValue(overtimePenaltyWeight, overallWorkloadWeight), 10).ToString("F10");
+        }
+        
+        private void CalculateDistanceMatrix()
+        {
+            _distanceMatrix = new Double[_customerList.Count, _customerList.Count];
+
+            for (int horizontalIndex = 0; horizontalIndex < _customerList.Count; horizontalIndex++)
+            {
+                for (int verticalIndex = 0; verticalIndex < _customerList.Count; verticalIndex++)
+                {
+                    _distanceMatrix[horizontalIndex, verticalIndex] = _customerList[horizontalIndex].DistanceTo(_customerList[verticalIndex]);
+                }
+            }
+        }
+
+        public Double DistanceBetween(Location one, Location another)
+        {
+            Int32 oneIndex = _customerList.IndexOf(one);
+            Int32 anotherIndex = _customerList.IndexOf(another);
+
+            if (oneIndex < 0 || anotherIndex < 0)
+            {
+                return one.DistanceTo(another);
+            }
+
+            return _distanceMatrix[oneIndex, anotherIndex];
         }
 
         #region IO
@@ -154,6 +183,16 @@ namespace TravelingAssemblyMen.Model
             if (style == LocalOptimisationStyle.TwoOpt)
             {
                 _solution.TwoOpt(neighborhoodRange);
+            }
+
+            if (style == LocalOptimisationStyle.Swap)
+            {
+                _solution.SwapOpt(neighborhoodRange);
+            }
+
+            if (style == LocalOptimisationStyle.Insert)
+            {
+                //_solution.InsertOpt(neighborhoodRange);
             }
         }
         #endregion

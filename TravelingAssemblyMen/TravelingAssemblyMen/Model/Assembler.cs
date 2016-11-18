@@ -19,12 +19,12 @@ namespace TravelingAssemblyMen.Model
         {
             get
             {
-                if (_workloadIsDirty)
-                {
-                    _CalculateWorkload();
-                }
-
                 return _workload;
+            }
+
+            set
+            {
+                _workload = value;
             }
         }
 
@@ -54,11 +54,11 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
-        public Int32 CustomersAssigned
+        public List<Location> CustomersAssigned
         {
             get
             {
-                return _customersAssigned.Count;
+                return _customersAssigned;
             }
         }
 
@@ -74,31 +74,12 @@ namespace TravelingAssemblyMen.Model
             _startingPosition = startingPosition;
         }
 
-        public void AcceptTask(Location newCustomer)
+        public void AcceptTask(Location newCustomer, Double fitnessDelta)
         {
             _InsertAppending(newCustomer);
-            _workloadIsDirty = true;
+            _workload += fitnessDelta;
         }
-
-        public void AcceptTask(Location newCustomer, CustomerInsertStyle style)
-        {
-            if (style == CustomerInsertStyle.Random)
-            {
-                _InsertRandomly(newCustomer);
-                _workloadIsDirty = true;
-                return;
-            }
-
-            if (style == CustomerInsertStyle.Append)
-            {
-                _InsertAppending(newCustomer);
-                _workloadIsDirty = true;
-                return;
-            }
-
-            AcceptTask(newCustomer);
-        }
-
+        
         public void RemoveTask(Location lostCustomer)
         {
             _customersAssigned.Remove(lostCustomer);
@@ -113,22 +94,6 @@ namespace TravelingAssemblyMen.Model
         
         public void InvertOrder(Location firstReversed, Location lastReversed)
         {
-            if (firstReversed.Equals(Location.HQ))
-            {
-                List<Location> movedList = _customersAssigned.GetRange(0, _customersAssigned.IndexOf(lastReversed) + 1);
-                
-                foreach (Location customer in movedList)
-                {
-                    _customersAssigned.Remove(customer);
-                }
-
-                movedList.Reverse();
-
-                _customersAssigned.AddRange(movedList);
-
-                _workloadIsDirty = true;
-                return;
-            }
 
             Int32 startIndex = _customersAssigned.IndexOf(firstReversed);
             Int32 endIndex = _customersAssigned.IndexOf(lastReversed);
@@ -141,44 +106,32 @@ namespace TravelingAssemblyMen.Model
             }
             
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
-            _workloadIsDirty = true;
         }
 
-        public Location CustomerAtPosition(int index)
+        internal void Swap(Location customer, Location swapper)
         {
-            if (index == -1 || index == _customersAssigned.Count)
-            {
-                return Location.HQ;
-            }
+            Int32 customerIndex = _customersAssigned.IndexOf(customer);
 
-            return _customersAssigned[index];
+            _customersAssigned.Remove(customer);
+            _customersAssigned.Insert(customerIndex, swapper);
+
+            return;
         }
-
-        /// <summary>
-        /// Returns the nth next customer in the assigned customers towards the parameter customer. 
-        /// Beware that if the customer is asigned the offset 0 will result in the customer itself;
-        /// </summary>
-        /// <param name="customer">The customers who's next neighbors are looked up.</param>
-        /// <param name="offset">The offset how close the neighbor should be in the ranking.</param>
-        /// <returns>The neighbor with an offset in the ranking.</returns>
-        public Location FindNeighbor(Location customer, Int32 offset)
-        {
-            List<Location> ranking = _customersAssigned.OrderBy(l => l.DistanceTo(customer)).ToList();
-
-            if (offset >= ranking.Count)
-            {
-                return ranking.Last();
-            }
-
-            return ranking[offset];
-        }
-
-        public static Double FitnessDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
+        
+        public Double FitnessDelta(Location thisCustomer, Location otherCustomer)
         {
             Double fitnessDelta = 0;
 
-            fitnessDelta -= piOfI.DistanceTo(piOfIPlusOne) + piOfJ.DistanceTo(piOfJPlusOne);
-            fitnessDelta += piOfI.DistanceTo(piOfJ) + piOfIPlusOne.DistanceTo(piOfJPlusOne);
+            Location thisPredecessor = this.CustomerBefore(thisCustomer);
+            Location thisSuccessor = this.CustomerAfter(thisCustomer);
+
+            fitnessDelta -= 
+                thisPredecessor.DistanceTo(thisCustomer) + 
+                thisCustomer.DistanceTo(thisSuccessor);
+
+            fitnessDelta +=
+                thisPredecessor.DistanceTo(otherCustomer) +
+                otherCustomer.DistanceTo(thisSuccessor);
 
             return fitnessDelta;
         }
@@ -234,43 +187,39 @@ namespace TravelingAssemblyMen.Model
 
             _customersAssigned.Insert(MyRNG.Next(_customersAssigned.Count + 1), newCustomer);
         }
-
-        /// <summary>
-        /// Calculates the workload for this assembler assuming every task takes about half an hour and he is able to drive towards every customer with an average velocity of 50 km/h.
-        /// </summary>
-        /// <returns>The necessary workload in hours.</returns>
-        private void _CalculateWorkload()
+        
+        public Location CustomerAt(int index)
         {
-            _workload = 0;
-            Location headquarters = new Location(0, 0);
-            Location currentLocation = headquarters;
-
-            for (int taskIndex = 0; taskIndex < _customersAssigned.Count; taskIndex++)
+            if (index == -1 || index == _customersAssigned.Count)
             {
-                Location nextCustomer = _customersAssigned[taskIndex];
-                Double travelDistance = nextCustomer.DistanceTo(currentLocation);
-                // assuming the assembler can travel towards the next customer with an average velocity of 50 km/h
-                Double travelTime = travelDistance / 50;
-                
-                // assuming every task takes around half an hour
-                _workload += 0.5;
-                _workload += travelTime;
-                currentLocation = nextCustomer;
+                return Location.HQ;
             }
 
-            Double distanceBackToHQ = headquarters.DistanceTo(currentLocation);
-            Double timeToHome = distanceBackToHQ / 50;
-
-            _workload += timeToHome;
-
-            _workloadIsDirty = false;
+            return _customersAssigned[index];
         }
 
         public Location CustomerAfter(Location customer)
         {
             int indexOfCustomer = _customersAssigned.IndexOf(customer);
 
-            return CustomerAtPosition(indexOfCustomer + 1);
+            return CustomerAt(indexOfCustomer + 1);
+        }
+
+        public Location CustomerBefore(Location customer)
+        {
+            int indexOfCustomer = _customersAssigned.IndexOf(customer);
+
+            return CustomerAt(indexOfCustomer - 1);
+        }
+
+        public Int32 PositionOf(Location customer)
+        {
+            return _customersAssigned.IndexOf(customer);
+        }
+
+        internal bool Processes(Location customer)
+        {
+            return _customersAssigned.Contains(customer);
         }
     }
 }

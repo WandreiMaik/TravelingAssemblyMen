@@ -54,6 +54,7 @@
             this.button2Opt = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
+            this.buttonSwap = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFitness = new System.Windows.Forms.Label();
@@ -187,11 +188,10 @@
             this.numericCustomercount.Size = new System.Drawing.Size(67, 20);
             this.numericCustomercount.TabIndex = 3;
             this.numericCustomercount.Value = new decimal(new int[] {
-            1,
+            15,
             0,
             0,
             0});
-            this.numericCustomercount.ValueChanged += new System.EventHandler(this.numericCustomercount_ValueChanged);
             // 
             // numericAssemblercount
             // 
@@ -211,11 +211,10 @@
             this.numericAssemblercount.Size = new System.Drawing.Size(67, 20);
             this.numericAssemblercount.TabIndex = 4;
             this.numericAssemblercount.Value = new decimal(new int[] {
-            1,
+            3,
             0,
             0,
             0});
-            this.numericAssemblercount.ValueChanged += new System.EventHandler(this.numericAssemblercount_ValueChanged);
             // 
             // buttonGenerateTAP
             // 
@@ -403,6 +402,7 @@
             this.tableLayoutPanel5.Controls.Add(this.button2Opt, 0, 1);
             this.tableLayoutPanel5.Controls.Add(this.label5, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
+            this.tableLayoutPanel5.Controls.Add(this.buttonSwap, 2, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
@@ -416,6 +416,7 @@
             // 
             this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel5.SetColumnSpan(this.button2Opt, 2);
+            this.button2Opt.Enabled = false;
             this.button2Opt.Location = new System.Drawing.Point(6, 39);
             this.button2Opt.Name = "button2Opt";
             this.button2Opt.Size = new System.Drawing.Size(150, 24);
@@ -453,10 +454,23 @@
             this.numericUpDownNeighborhoodRange.Size = new System.Drawing.Size(75, 20);
             this.numericUpDownNeighborhoodRange.TabIndex = 2;
             this.numericUpDownNeighborhoodRange.Value = new decimal(new int[] {
-            1,
+            5,
             0,
             0,
             0});
+            // 
+            // buttonSwap
+            // 
+            this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel5.SetColumnSpan(this.buttonSwap, 2);
+            this.buttonSwap.Enabled = false;
+            this.buttonSwap.Location = new System.Drawing.Point(168, 39);
+            this.buttonSwap.Name = "buttonSwap";
+            this.buttonSwap.Size = new System.Drawing.Size(150, 24);
+            this.buttonSwap.TabIndex = 3;
+            this.buttonSwap.Text = "Swap";
+            this.buttonSwap.UseVisualStyleBackColor = true;
+            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
             // 
             // groupBox2
             // 
@@ -597,6 +611,7 @@
         private System.Windows.Forms.Button button2Opt;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numericUpDownNeighborhoodRange;
+        private System.Windows.Forms.Button buttonSwap;
     }
 }
 
