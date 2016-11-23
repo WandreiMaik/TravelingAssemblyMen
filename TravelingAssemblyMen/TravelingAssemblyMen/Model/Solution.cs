@@ -16,16 +16,18 @@ namespace TravelingAssemblyMen.Model
         private List<Assembler> _team;
         private Location[] startingLocations =
             {
-                new Location(-50, -50),
-                new Location(50, 50),
-                new Location(-50, 50),
-                new Location(50, -50),
-                new Location(0, -25),
-                new Location(0, 25),
-                new Location(25, 0),
-                new Location(-25, 0)
+                new Location(-50, -50, "startingLocation0"),
+                new Location(50, 50, "startingLocation1"),
+                new Location(-50, 50, "startingLocation2"),
+                new Location(50, -50, "startingLocation3"),
+                new Location(0, -25, "startingLocation4"),
+                new Location(0, 25, "startingLocation5"),
+                new Location(25, 0, "startingLocation6"),
+                new Location(-25, 0, "startingLocation7")
             };
         private TAP _task;
+        private Double _overtimePenaltyWeight;
+        private Double _overallDistanceWeight;
 
         public Int32 NumberOfAssembler
         {
@@ -35,7 +37,23 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
-        public Solution(TAP task, Int32 numberOfAssembler)
+        public Double OvertimePenaltyWeigth
+        {
+            set
+            {
+                _overtimePenaltyWeight = value;
+            }
+        }
+
+        public Double OverallWorkloadWeight
+        {
+            set
+            {
+                _overallDistanceWeight = value;
+            }
+        }
+
+        public Solution(TAP task, Int32 numberOfAssembler, Double overtimePenaltyWeight, Double overallDistanceWeight)
         {
             _task = task;
             _team = new List<Assembler>();
@@ -50,6 +68,9 @@ namespace TravelingAssemblyMen.Model
 
                 _team.Add(new Assembler());
             }
+
+            _overtimePenaltyWeight = overtimePenaltyWeight;
+            _overallDistanceWeight = overallDistanceWeight;
         }
 
         public void SolveRandomly()
@@ -97,20 +118,18 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
-        public Double FitnessValue(Double overtimePenaltyWeight, Double overallWorkloadWeight)
+        public Double FitnessValue()
         {
             Double fitness = 0;
-            Double overallWorkload = 0;
+            Double overallDistance = 0;
 
             foreach (Assembler worker in _team)
             {
-                Double oldWorkload = worker.Workload;
-
-                overallWorkload += worker.Workload;
-                fitness += worker.Workload + Math.Max((worker.Workload - 8) * overtimePenaltyWeight, 0);
+                overallDistance += worker.DistanceTraveled;
+                fitness += Math.Max((worker.Workload - 8) * _overtimePenaltyWeight, 0) + worker.Workload;
             }
 
-            fitness += overallWorkload * overallWorkloadWeight;
+            fitness += overallDistance / 50 * _overallDistanceWeight;
 
             return fitness;
         }
@@ -184,54 +203,59 @@ namespace TravelingAssemblyMen.Model
                 {
                     madeChange = false;
 
+                    bool foundCandidate = false;
+                    Location bestCustomer = null;
+                    Location bestNeighbor = null;
+                    Double bestDistanceDelta = 0;
+                    Double bestFitnessDelta = 0;
+
                     for (int customerindex = -1; customerindex < worker.CustomersAssigned.Count; customerindex++)
                     {
-                        bool foundCandidate = false;
-                        Location candidate = null;
-                        Double fitnessDelta = 0;
 
-                        Location customer = worker.CustomerAt(customerindex);
-                        List<Location> neighborhood = FindSubrouteNeighbors(customer, neighborhoodRange, worker);
+                        Location currentCustomer = worker.CustomerAt(customerindex);
+                        List<Location> neighborhood = FindSubrouteNeighbors(currentCustomer, neighborhoodRange, worker);
 
-                        foreach (Location neighbor in neighborhood)
+                        foreach (Location currentNeighbor in neighborhood)
                         {
-                            Location piOfI = customer;
-                            Location piOfJ = neighbor;
-
-                            if (worker.PositionOf(customer) > worker.PositionOf(neighbor))
+                            Location piOfIPlusOne = worker.CustomerAfter(currentCustomer);
+                            Location piOfJ = currentNeighbor;
+                            
+                            if (piOfIPlusOne.Equals(piOfJ))
                             {
-                                piOfI = neighbor;
-                                piOfJ = customer;
+                                continue;
                             }
 
-                            Location piOfIPlusOne = worker.CustomerAfter(piOfI);
                             Location piOfJPlusOne = worker.CustomerAfter(piOfJ);
                             
-                            Double newFitnessDelta = FitnessDelta(piOfI, piOfIPlusOne, piOfJ, piOfJPlusOne);
+                            Double newRawDistanceDelta = DistanceDelta(currentCustomer, piOfIPlusOne, piOfJ, piOfJPlusOne);
+                            Double newDistanceDelta = newRawDistanceDelta * _overallDistanceWeight;
+                            Double newWorkloadDelta = (newRawDistanceDelta / 50) + (Math.Max((worker.Workload + (newRawDistanceDelta / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
+                            Double newFitnessDelta = newDistanceDelta + newWorkloadDelta;
 
-                            if (newFitnessDelta < fitnessDelta)
+                            if (newFitnessDelta < bestFitnessDelta)
                             {
-                                fitnessDelta = newFitnessDelta;
-                                candidate = neighbor;
+                                bestDistanceDelta = newRawDistanceDelta;
+                                bestFitnessDelta = newFitnessDelta;
+                                bestCustomer = currentCustomer;
+                                bestNeighbor = currentNeighbor;
                                 foundCandidate = true;
                             }
                         }
+                    }
 
-                        if (foundCandidate)
+                    if (foundCandidate)
+                    {
+                        Location reverseStart = worker.CustomerAfter(bestCustomer);
+                        Location reverseEnd = bestNeighbor;
+
+                        if (worker.PositionOf(bestCustomer) > worker.PositionOf(bestNeighbor))
                         {
-                            Location reverseStart = worker.CustomerAfter(customer);
-                            Location reverseEnd = candidate;
-
-                            if (worker.PositionOf(customer) > worker.PositionOf(candidate))
-                            {
-                                reverseStart = worker.CustomerAfter(candidate);
-                                reverseEnd = customer;
-                            }
-
-                            worker.InvertOrder(reverseStart, reverseEnd);
-                            worker.Workload += fitnessDelta;
-                            madeChange = true;
+                            reverseStart = worker.CustomerAfter(bestNeighbor);
+                            reverseEnd = bestCustomer;
                         }
+
+                        worker.InvertOrder(reverseStart, reverseEnd, bestDistanceDelta);
+                        madeChange = true;
                     }
                 }
                 while (madeChange);
@@ -240,6 +264,8 @@ namespace TravelingAssemblyMen.Model
 
         public void SwapOpt(int neighborhoodRange)
         {
+            // swapping results in wrong fitness deltas (as it seems because they increase ._.
+            // TODO FIX YA SHIZZLE
             if (_team.Count < 2)
             {
                 return;
@@ -257,8 +283,10 @@ namespace TravelingAssemblyMen.Model
                     {
                         bool foundCandidate = false;
                         Location candidate = null;
-                        Double fitnessDeltaThis = 0;
-                        double fitnessDeltaOther = 0;
+                        Double bestDistanceDeltaThis = 0;
+                        Double bestDistanceDeltaOther = 0;
+                        Double bestFitnessDeltaThis = 0;
+                        Double bestFitnessDeltaOther = 0;
 
                         for (int neighborOffset = 1; neighborOffset <= neighborhoodRange; neighborOffset++)
                         {
@@ -272,13 +300,22 @@ namespace TravelingAssemblyMen.Model
 
                             Assembler swapPartner = Processes(swapCustomer);
 
-                            Double newFitnessDeltaThis = worker.FitnessDelta(currentCustomer, swapCustomer);
-                            Double newFitnessDeltaOther = swapPartner.FitnessDelta(swapCustomer, currentCustomer);
+                            Double newRawDistanceDeltaThis = worker.DistanceDelta(currentCustomer, swapCustomer);
+                            Double newDistanceDeltaThis = newRawDistanceDeltaThis * _overallDistanceWeight;
+                            Double newWorkloadDeltaThis = (newRawDistanceDeltaThis / 50) + (Math.Max((worker.Workload + (newRawDistanceDeltaThis / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
+                            Double newFitnessDeltaThis = newDistanceDeltaThis + newWorkloadDeltaThis;
 
-                            if (newFitnessDeltaThis + newFitnessDeltaOther < fitnessDeltaThis + fitnessDeltaOther)
+                            Double newRawDistanceDeltaOther = swapPartner.DistanceDelta(swapCustomer, currentCustomer);
+                            Double newDistanceDeltaOther = newRawDistanceDeltaOther * _overallDistanceWeight;
+                            Double newWorkloadDeltaOther = (newRawDistanceDeltaOther / 50) + (Math.Max((swapPartner.Workload + (newRawDistanceDeltaOther / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(swapPartner.Workload - 8, 0) * _overtimePenaltyWeight);
+                            Double newFitnessDeltaOther = newDistanceDeltaOther + newWorkloadDeltaOther;
+                            
+                            if (newFitnessDeltaThis + newFitnessDeltaOther < bestFitnessDeltaThis + bestFitnessDeltaOther)
                             {
-                                fitnessDeltaThis = newFitnessDeltaThis;
-                                fitnessDeltaOther = newFitnessDeltaOther;
+                                bestDistanceDeltaThis = newRawDistanceDeltaThis;
+                                bestDistanceDeltaOther = newRawDistanceDeltaOther;
+                                bestFitnessDeltaThis = newFitnessDeltaThis;
+                                bestFitnessDeltaOther = newFitnessDeltaOther;
                                 candidate = swapCustomer;
                                 foundCandidate = true;
                             }
@@ -289,11 +326,9 @@ namespace TravelingAssemblyMen.Model
                             Assembler swapPartner = Processes(candidate);
                             Location customer = worker.CustomerAt(customerindex);
 
-                            worker.Swap(customer, candidate);
-                            worker.Workload += fitnessDeltaThis;
+                            worker.Swap(customer, candidate, bestDistanceDeltaThis);
 
-                            swapPartner.Swap(candidate, customer);
-                            swapPartner.Workload += fitnessDeltaOther;
+                            swapPartner.Swap(candidate, customer, bestDistanceDeltaOther);
 
                             madeChange = true;
                         }
@@ -359,7 +394,7 @@ namespace TravelingAssemblyMen.Model
             return ranking;
         }
         
-        public Double FitnessDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
+        public Double DistanceDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
         {
             Double fitnessDelta = 0;
 
@@ -371,19 +406,19 @@ namespace TravelingAssemblyMen.Model
 
         private void AssignTask(Location customer, Assembler worker, List<Location> unassignedCustomers)
         {
-            Double fitnessDelta = 0;
+            Double distanceDelta = 0;
 
             if (worker.CustomersAssigned.Count > 0)
             {
-                fitnessDelta -= _task.DistanceBetween(worker.CustomerBefore(worker.LastCustomer), worker.LastCustomer) + _task.DistanceBetween(worker.LastCustomer, Location.HQ);
-                fitnessDelta += _task.DistanceBetween(worker.LastCustomer, customer) + _task.DistanceBetween(customer, Location.HQ);
+                distanceDelta -= _task.DistanceBetween(worker.CustomerBefore(worker.LastCustomer), worker.LastCustomer) + _task.DistanceBetween(worker.LastCustomer, Location.HQ);
+                distanceDelta += _task.DistanceBetween(worker.LastCustomer, customer) + _task.DistanceBetween(customer, Location.HQ);
             }
             else
             {
-                fitnessDelta += _task.DistanceBetween(Location.HQ, customer) + _task.DistanceBetween(customer, Location.HQ);
+                distanceDelta += _task.DistanceBetween(Location.HQ, customer) + _task.DistanceBetween(customer, Location.HQ);
             }
 
-            worker.AcceptTask(customer, fitnessDelta);
+            worker.AcceptTask(customer, distanceDelta);
             unassignedCustomers.Remove(customer);
         }
 

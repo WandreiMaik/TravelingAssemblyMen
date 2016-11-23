@@ -10,10 +10,26 @@ namespace TravelingAssemblyMen.Model
 {
     public class Assembler
     {
+        #region Fields
         private List<Location> _customersAssigned;
         private Double _workload;
-        private bool _workloadIsDirty;
-        private Location _startingPosition;
+        private Double _travelDistance;
+        private Location _startingPosition; 
+        #endregion
+
+        #region Properties
+        public Double DistanceTraveled
+        {
+            get
+            {
+                return _travelDistance;
+            }
+
+            set
+            {
+                _travelDistance = value;
+            }
+        }
 
         public Double Workload
         {
@@ -47,7 +63,7 @@ namespace TravelingAssemblyMen.Model
             {
                 if (_startingPosition == null)
                 {
-                    return new Location(0, 0);
+                    return Location.HQ;
                 }
 
                 return _startingPosition;
@@ -61,98 +77,72 @@ namespace TravelingAssemblyMen.Model
                 return _customersAssigned;
             }
         }
+        #endregion
 
+        #region Constructors
         public Assembler()
         {
             _customersAssigned = new List<Location>();
             _workload = 0;
-            _workloadIsDirty = true;
         }
 
         public Assembler(Location startingPosition) : this()
         {
             _startingPosition = startingPosition;
-        }
+        } 
+        #endregion
 
-        public void AcceptTask(Location newCustomer, Double fitnessDelta)
+        #region WorkManipulation
+        public void AcceptTask(Location newCustomer, Double distanceDelta)
         {
-            _InsertAppending(newCustomer);
-            _workload += fitnessDelta;
+            _customersAssigned.Add(newCustomer);
+
+            _workload += 0.5;
+            _travelDistance += distanceDelta;
         }
         
-        public void RemoveTask(Location lostCustomer)
+        public void RemoveTask(Location lostCustomer, Double distanceDelta)
         {
             _customersAssigned.Remove(lostCustomer);
-            _workloadIsDirty = true;
+
+            _workload -= 0.5;
+            _travelDistance += distanceDelta;
         }
 
         public void RemoveEveryTask()
         {
             _customersAssigned.Clear();
-            _workloadIsDirty = true;
+            _workload = 0;
+            _travelDistance = 0;
         }
-        
-        public void InvertOrder(Location firstReversed, Location lastReversed)
+
+        public void InvertOrder(Location firstReversed, Location lastReversed, Double distanceDelta)
         {
 
-            Int32 startIndex = _customersAssigned.IndexOf(firstReversed);
-            Int32 endIndex = _customersAssigned.IndexOf(lastReversed);
+            Int32 startIndex = PositionOf(firstReversed);
+            Int32 endIndex = PositionOf(lastReversed);
 
-            if (startIndex > endIndex)
-            {
-                Int32 helper = startIndex;
-                startIndex = endIndex;
-                endIndex = helper;
-            }
-            
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
+            _travelDistance += distanceDelta;
         }
 
-        internal void Swap(Location customer, Location swapper)
+        public void Swap(Location customer, Location swapper, Double distanceDelta)
         {
             Int32 customerIndex = _customersAssigned.IndexOf(customer);
 
             _customersAssigned.Remove(customer);
             _customersAssigned.Insert(customerIndex, swapper);
+            
+            _travelDistance += distanceDelta;
 
             return;
-        }
-        
-        public Double FitnessDelta(Location thisCustomer, Location otherCustomer)
-        {
-            Double fitnessDelta = 0;
+        } 
+        #endregion
 
-            Location thisPredecessor = this.CustomerBefore(thisCustomer);
-            Location thisSuccessor = this.CustomerAfter(thisCustomer);
-
-            fitnessDelta -= 
-                thisPredecessor.DistanceTo(thisCustomer) + 
-                thisCustomer.DistanceTo(thisSuccessor);
-
-            fitnessDelta +=
-                thisPredecessor.DistanceTo(otherCustomer) +
-                otherCustomer.DistanceTo(thisSuccessor);
-
-            return fitnessDelta;
-        }
-
-        /// <summary>
-        /// Inserts a new customer at the end
-        /// </summary>
-        /// <param name="newCustomer">The new customer that needs to be accepted into the assigned customer list and put into place.</param>
-        private void _InsertAppending(Location newCustomer)
-        {
-            if (_customersAssigned.Contains(newCustomer))
-            {
-                return;
-            }
-
-            _customersAssigned.Add(newCustomer);
-        }
-
+        #region Visualisation
         public void Draw(Graphics graphics, Position origin, double pixelsPerKilometer, Color lineColor)
         {
-            Location headquarters = new Location(0, 0);
+            Location headquarters = Location.HQ;
             Location currentLocation = headquarters;
 
             for (int taskIndex = 0; taskIndex < _customersAssigned.Count; taskIndex++)
@@ -172,22 +162,10 @@ namespace TravelingAssemblyMen.Model
             }
 
             currentLocation.DrawLineTo(headquarters, graphics, origin, pixelsPerKilometer, lineColor);
-        }
+        } 
+        #endregion
 
-        /// <summary>
-        /// Inserts a new customer into a random position
-        /// </summary>
-        /// <param name="newCustomer">The new customer that needs to be accepted into the assigned customer list and put into place.</param>
-        private void _InsertRandomly(Location newCustomer)
-        {
-            if (_customersAssigned.Contains(newCustomer))
-            {
-                return;
-            }
-
-            _customersAssigned.Insert(MyRNG.Next(_customersAssigned.Count + 1), newCustomer);
-        }
-        
+        #region Utility
         public Location CustomerAt(int index)
         {
             if (index == -1 || index == _customersAssigned.Count)
@@ -217,9 +195,34 @@ namespace TravelingAssemblyMen.Model
             return _customersAssigned.IndexOf(customer);
         }
 
-        internal bool Processes(Location customer)
+        public bool Processes(Location customer)
         {
             return _customersAssigned.Contains(customer);
+        } 
+
+        /// <summary>
+        /// Calculates the resulting distance delta if a swap of thisCustomer with otherCustomer would occur.
+        /// </summary>
+        /// <param name="thisCustomer">The customer which will be removed.</param>
+        /// <param name="otherCustomer">The customer which will be added.</param>
+        /// <returns>The delta of the fitness value as a raw distance value.</returns>
+        public Double DistanceDelta(Location thisCustomer, Location otherCustomer)
+        {
+            Double distanceDelta = 0;
+
+            Location thisPredecessor = this.CustomerBefore(thisCustomer);
+            Location thisSuccessor = this.CustomerAfter(thisCustomer);
+
+            distanceDelta -= 
+                thisPredecessor.DistanceTo(thisCustomer) + 
+                thisCustomer.DistanceTo(thisSuccessor);
+
+            distanceDelta +=
+                thisPredecessor.DistanceTo(otherCustomer) +
+                otherCustomer.DistanceTo(thisSuccessor);
+
+            return distanceDelta;
         }
+        #endregion
     }
 }

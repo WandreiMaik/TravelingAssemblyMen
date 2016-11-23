@@ -48,7 +48,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxOvertimePenalty = new System.Windows.Forms.TextBox();
-            this.textBoxOverallWorkload = new System.Windows.Forms.TextBox();
+            this.textBoxOverallDistance = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.button2Opt = new System.Windows.Forms.Button();
@@ -331,7 +331,7 @@
             this.tableLayoutPanel3.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.label2, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.textBoxOvertimePenalty, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.textBoxOverallWorkload, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.textBoxOverallDistance, 1, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -355,11 +355,11 @@
             // 
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(48, 33);
+            this.label2.Location = new System.Drawing.Point(52, 33);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(96, 13);
+            this.label2.Size = new System.Drawing.Size(92, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Over-All Workload:";
+            this.label2.Text = "Over-All Distance:";
             // 
             // textBoxOvertimePenalty
             // 
@@ -371,15 +371,15 @@
             this.textBoxOvertimePenalty.Text = "1,0";
             this.textBoxOvertimePenalty.TextChanged += new System.EventHandler(this.textBoxOvertimePenalty_TextChanged);
             // 
-            // textBoxOverallWorkload
+            // textBoxOverallDistance
             // 
-            this.textBoxOverallWorkload.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxOverallWorkload.Location = new System.Drawing.Point(150, 29);
-            this.textBoxOverallWorkload.Name = "textBoxOverallWorkload";
-            this.textBoxOverallWorkload.Size = new System.Drawing.Size(171, 20);
-            this.textBoxOverallWorkload.TabIndex = 5;
-            this.textBoxOverallWorkload.Text = "1,0";
-            this.textBoxOverallWorkload.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
+            this.textBoxOverallDistance.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxOverallDistance.Location = new System.Drawing.Point(150, 29);
+            this.textBoxOverallDistance.Name = "textBoxOverallDistance";
+            this.textBoxOverallDistance.Size = new System.Drawing.Size(171, 20);
+            this.textBoxOverallDistance.TabIndex = 5;
+            this.textBoxOverallDistance.Text = "1,0";
+            this.textBoxOverallDistance.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
             // 
             // groupBox3
             // 
@@ -603,7 +603,7 @@
         private System.Windows.Forms.Label labelFitness;
         private System.Windows.Forms.Label labelFitnessValue;
         private System.Windows.Forms.TextBox textBoxOvertimePenalty;
-        private System.Windows.Forms.TextBox textBoxOverallWorkload;
+        private System.Windows.Forms.TextBox textBoxOverallDistance;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.GroupBox groupBox3;

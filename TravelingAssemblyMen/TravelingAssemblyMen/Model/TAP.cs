@@ -39,14 +39,24 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
+        public Double OvertimePenaltyWeight
+        {
+            set { _solution.OvertimePenaltyWeigth = value; }
+        }
+
+        public Double OverallWorkloadWeight
+        {
+            set { _solution.OverallWorkloadWeight = value; }
+        }
+
         #region Constructors
-        public TAP(Int32 numberOfAssemblers, Int32 numberOfCustomers)
+        public TAP(Int32 numberOfAssemblers, Int32 numberOfCustomers, Double overtimePenaltyWeight, Double overallDistanceWeight)
         {
             _customerList = new List<Location>();
 
             while (_customerList.Count < numberOfCustomers)
             {
-                Location newCustomer = new Location((MyRNG.NextDouble() * 100) - 50, (MyRNG.NextDouble() * 100) - 50);
+                Location newCustomer = new Location((MyRNG.NextDouble() * 100) - 50, (MyRNG.NextDouble() * 100) - 50, _customerList.Count.ToString());
 
                 if (_customerList.Contains(newCustomer))
                 {
@@ -58,14 +68,14 @@ namespace TravelingAssemblyMen.Model
 
             CalculateDistanceMatrix();
 
-            _solution = new Solution(this, numberOfAssemblers);
+            _solution = new Solution(this, numberOfAssemblers, overtimePenaltyWeight, overallDistanceWeight);
         }
 
-        public TAP(Int32 numberOfAssemblers, List<Location> customers)
+        public TAP(Int32 numberOfAssemblers, List<Location> customers, Double overtimePenaltyWeight, Double overallDistanceWeight)
         {
             _customerList = customers ?? new List<Location>();
             CalculateDistanceMatrix();
-            _solution = new Solution(this, numberOfAssemblers);
+            _solution = new Solution(this, numberOfAssemblers, overtimePenaltyWeight, overallDistanceWeight);
         } 
         #endregion
 
@@ -85,9 +95,9 @@ namespace TravelingAssemblyMen.Model
             _solution.DrawSolution(graphics, origin, pixelsPerKilometer);
         }
 
-        public string FitnessValue(Double overtimePenaltyWeight, Double overallWorkloadWeight)
+        public string FitnessValue()
         {
-            return Math.Round(_solution.FitnessValue(overtimePenaltyWeight, overallWorkloadWeight), 10).ToString("F10");
+            return Math.Round(_solution.FitnessValue(), 10).ToString("F10");
         }
         
         private void CalculateDistanceMatrix()
@@ -134,7 +144,7 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
-        public static TAP Open(string fileName)
+        public static TAP Open(string fileName, Double overtimePenaltyWeight, Double overallDistanceWeight)
         {
             using (StreamReader fileReader = new StreamReader(fileName))
             {
@@ -171,10 +181,10 @@ namespace TravelingAssemblyMen.Model
 
                 while (customers.Count < numberOfCustomers)
                 {
-                    customers.Add(new Location(fileReader.ReadLine()));
+                    customers.Add(new Location(fileReader.ReadLine(), customers.Count.ToString()));
                 }
 
-                return new TAP(numberOfAssemblers, customers);
+                return new TAP(numberOfAssemblers, customers, overtimePenaltyWeight, overallDistanceWeight);
             }
         }
 

@@ -15,7 +15,7 @@ namespace TravelingAssemblyMen
     {
         private TAP _problem;
         private Double _overtimePenaltyWeight = 1;
-        private Double _overallWorkdloadWeight = 1;
+        private Double _overallDistanceWeight = 1;
 
         public Form1()
         {
@@ -24,12 +24,12 @@ namespace TravelingAssemblyMen
 
         private void UpdateFitness()
         {
-            labelFitnessValue.Text = _problem.FitnessValue(_overtimePenaltyWeight, _overallWorkdloadWeight);
+            labelFitnessValue.Text = _problem.FitnessValue();
         }
 
         private void buttonGenerateTAP_Click(object sender, EventArgs e)
         {
-            _problem = new TAP((Int32)numericAssemblercount.Value, (Int32)numericCustomercount.Value);
+            _problem = new TAP((Int32)numericAssemblercount.Value, (Int32)numericCustomercount.Value, _overtimePenaltyWeight, _overallDistanceWeight);
             labelFitnessValue.Text = "0";
             buttonSaveTAP.Enabled = true;
             buttonSolveGreedy.Enabled = true;
@@ -51,7 +51,7 @@ namespace TravelingAssemblyMen
             Double pixelsPerKilometer = (width - 40) / 100;
 
             // headquarters
-            new Location(0, 0).Draw(e.Graphics, origin, pixelsPerKilometer, Color.Red);
+            TravelingAssemblyMen.Model.Location.HQ.Draw(e.Graphics, origin, pixelsPerKilometer, Color.Red);
 
             if (_problem != null)
             {
@@ -75,23 +75,37 @@ namespace TravelingAssemblyMen
             if (Double.TryParse(textBoxOvertimePenalty.Text, out newValue))
             {
                 _overtimePenaltyWeight = newValue;
+
+                if (_problem != null)
+                {
+                    _problem.OvertimePenaltyWeight = newValue;
+                }
+
                 return;
             }
 
             MessageBox.Show("The input Value for the overtime penalty weight is not a correct floating point value.");
+            textBoxOvertimePenalty.Text = _overtimePenaltyWeight.ToString();
         }
 
         private void textBoxOverallWorkload_TextChanged(object sender, EventArgs e)
         {
             double newValue;
 
-            if (Double.TryParse(textBoxOverallWorkload.Text, out newValue))
+            if (Double.TryParse(textBoxOverallDistance.Text, out newValue))
             {
-                _overallWorkdloadWeight = newValue;
+                _overallDistanceWeight = newValue;
+
+                if (_problem != null)
+                {
+                    _problem.OverallWorkloadWeight = newValue;
+                }
+
                 return;
             }
 
             MessageBox.Show("The input Value for the overall workload weight is not a correct floating point value.");
+            textBoxOverallDistance.Text = _overallDistanceWeight.ToString();
         }
 
         private void buttonSaveTAP_Click(object sender, EventArgs e)
@@ -108,7 +122,7 @@ namespace TravelingAssemblyMen
             {
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    _problem = TAP.Open(openFileDialog.FileName);
+                    _problem = TAP.Open(openFileDialog.FileName, _overtimePenaltyWeight, _overallDistanceWeight);
                     labelFitnessValue.Text = "0";
                     buttonSaveTAP.Enabled = true;
                     buttonSolveGreedy.Enabled = true;

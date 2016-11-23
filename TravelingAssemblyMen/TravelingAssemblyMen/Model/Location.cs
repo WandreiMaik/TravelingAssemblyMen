@@ -10,6 +10,7 @@ namespace TravelingAssemblyMen.Model
 {
     public class Location : IEquatable<Location>
     {
+        private String _id;
         private Position _position;
 
         #region CoordinateBoundaries
@@ -17,17 +18,18 @@ namespace TravelingAssemblyMen.Model
         const float leftHorizontalBound = -50;
         const float upperVerticalBound = 50;
         const float lowerVerticalBound = -50;
-        internal static readonly Location HQ = new Location(0, 0);
+        internal static readonly Location HQ = new Location(0, 0, "HQ");
         #endregion
 
         #region Constructors
-        public Location(Double X, Double Y)
+        public Location(Double X, Double Y, String id)
         {
             _X = X;
             _Y = Y;
+            _id = id;
         }
 
-        public Location(String locationString)
+        public Location(String locationString, String id)
         {
             locationString = Regex.Replace(locationString, @"\s+", "");
 
@@ -58,6 +60,7 @@ namespace TravelingAssemblyMen.Model
 
             _X = x;
             _Y = y;
+            _id = id;
         }
         #endregion
 
@@ -111,7 +114,7 @@ namespace TravelingAssemblyMen.Model
 
         public override String ToString() 
         {
-            return "(" + _position.x + ";" + _position.y + ")";
+            return "(" + _position.x + ";" + _position.y + ") \"" + _id + "\"";
         }
         #endregion
 
