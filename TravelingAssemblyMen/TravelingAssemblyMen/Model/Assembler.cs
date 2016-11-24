@@ -120,18 +120,12 @@ namespace TravelingAssemblyMen.Model
 
         public void InvertOrder(Location firstReversed, Location lastReversed, Double distanceDelta)
         {
-
             Int32 startIndex = PositionOf(firstReversed);
             Int32 endIndex = PositionOf(lastReversed);
 
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
             _travelDistance += distanceDelta;
             Double realDistanceTraveled = CalculateDistanceTraveled();
-
-            if (_travelDistance != realDistanceTraveled)
-            {
-                double diff = realDistanceTraveled - _travelDistance;
-            }
         }
 
         public void Swap(Location removeCustomer, Location insertCustomer, Int32 insertIndex, Double distanceDelta)
@@ -144,11 +138,6 @@ namespace TravelingAssemblyMen.Model
             _customersAssigned.Insert(insertIndex, insertCustomer);
 
             _travelDistance += distanceDelta;
-
-            if (_travelDistance != CalculateDistanceTraveled())
-            {
-                double diff = 0;
-            }
         } 
         #endregion
 

@@ -336,7 +336,6 @@ namespace TravelingAssemblyMen.Model
                                 bestInsertIndexWorker = workerInsertIndex;
                                 bestInsertIndexSwapPartner = swapPartnerInsertIndex;
                                 foundCandidate = true;
-                                madeChange = true;
                             }
                         }
                     }
@@ -349,19 +348,11 @@ namespace TravelingAssemblyMen.Model
                     List<DistanceMatrixEntry> currentCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(bestCurrentCustomer)];
                     List<DistanceMatrixEntry> swapCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(bestSwapCustomer)];
 
-                    foreach (DistanceMatrixEntry distance in currentCustomerDistances)
-                    {
-                        if (!distance.Distance.Equals(distance.Customer.DistanceTo(bestCurrentCustomer)))
-                        {
-                            int i = 0;
-                        }
-                    }
-
                     worker.Swap(bestCurrentCustomer, bestSwapCustomer, bestInsertIndexWorker, bestDistanceDeltaWorker);
 
                     swapPartner.Swap(bestSwapCustomer, bestCurrentCustomer, bestInsertIndexSwapPartner, bestDistanceDeltaSwapPartner);
 
-                   // madeChange = true;
+                    madeChange = true;
                 }
             }
             while (madeChange);
@@ -415,11 +406,6 @@ namespace TravelingAssemblyMen.Model
         /// <returns>The delta of the raw distance value.</returns>
         public Double DistanceDelta(Assembler worker, Location removedCustomer, Location insertedCustomer, List<DistanceMatrixEntry> insertedDistanceMatrix, out Int32 insertedIndex)
         {
-            if (removedCustomer.ToString().Equals("(47,174703747581;17,554246153474) \"10\"", StringComparison.CurrentCulture) && insertedCustomer.ToString().Equals("(9,0249369661439;6,9449871577997) \"2\"", StringComparison.CurrentCulture))
-            {
-                int i = 0;
-            }
-
             Double distanceDelta = 0;
 
             Location predecessor = worker.CustomerBefore(removedCustomer);
@@ -437,6 +423,13 @@ namespace TravelingAssemblyMen.Model
                 }
             }
 
+            Location prepredecessor = worker.CustomerBefore(predecessor);
+
+            if (prepredecessor.Equals(removedCustomer))
+            {
+                prepredecessor = worker.CustomerBefore(prepredecessor);
+            }
+
             successor = worker.CustomerAfter(predecessor);
 
             if (successor.Equals(removedCustomer))
@@ -444,8 +437,14 @@ namespace TravelingAssemblyMen.Model
                 successor = worker.CustomerAfter(successor);
             }
 
-            Double distance1 = _task.DistanceBetween(predecessor, insertedCustomer);
-            Double distance2 = _task.DistanceBetween(insertedCustomer, successor);
+            Double beforePredecessorDelta = prepredecessor.DistanceTo(insertedCustomer) + insertedCustomer.DistanceTo(predecessor) - prepredecessor.DistanceTo(predecessor);
+            Double afterPredecessorDelta = predecessor.DistanceTo(insertedCustomer) + insertedCustomer.DistanceTo(successor) - predecessor.DistanceTo(successor);
+
+            if (beforePredecessorDelta < afterPredecessorDelta)
+            {
+                successor = predecessor;
+                predecessor = prepredecessor;
+            }
 
             distanceDelta -= _task.DistanceBetween(predecessor, successor);
             distanceDelta += _task.DistanceBetween(predecessor, insertedCustomer) + _task.DistanceBetween(insertedCustomer, successor);
