@@ -203,14 +203,13 @@ namespace TravelingAssemblyMen.Model
                 {
                     madeChange = false;
 
-                    bool foundCandidate = false;
-                    Location bestCustomer = null;
-                    Location bestNeighbor = null;
-                    Double bestDistanceDelta = 0;
-                    Double bestFitnessDelta = 0;
-
                     for (int customerindex = -1; customerindex < worker.CustomersAssigned.Count; customerindex++)
                     {
+
+                        bool foundCandidate = false;
+                        Location bestCustomer = null;
+                        Location bestNeighbor = null;
+                        Double bestDistanceDelta = 0;
 
                         Location currentCustomer = worker.CustomerAt(customerindex);
                         List<Location> neighborhood = FindSubrouteNeighbors(currentCustomer, neighborhoodRange, worker);
@@ -228,34 +227,31 @@ namespace TravelingAssemblyMen.Model
                             Location piOfJPlusOne = worker.CustomerAfter(piOfJ);
                             
                             Double newRawDistanceDelta = DistanceDelta(currentCustomer, piOfIPlusOne, piOfJ, piOfJPlusOne);
-                            Double newDistanceDelta = newRawDistanceDelta * _overallDistanceWeight;
-                            Double newWorkloadDelta = (newRawDistanceDelta / 50) + (Math.Max((worker.Workload + (newRawDistanceDelta / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
-                            Double newFitnessDelta = newDistanceDelta + newWorkloadDelta;
 
-                            if (newFitnessDelta < bestFitnessDelta)
+                            if (newRawDistanceDelta < bestDistanceDelta)
                             {
                                 bestDistanceDelta = newRawDistanceDelta;
-                                bestFitnessDelta = newFitnessDelta;
                                 bestCustomer = currentCustomer;
                                 bestNeighbor = currentNeighbor;
                                 foundCandidate = true;
                             }
                         }
-                    }
 
-                    if (foundCandidate)
-                    {
-                        Location reverseStart = worker.CustomerAfter(bestCustomer);
-                        Location reverseEnd = bestNeighbor;
-
-                        if (worker.PositionOf(bestCustomer) > worker.PositionOf(bestNeighbor))
+                        if (foundCandidate)
                         {
-                            reverseStart = worker.CustomerAfter(bestNeighbor);
-                            reverseEnd = bestCustomer;
-                        }
+                            Location reverseStart = worker.CustomerAfter(bestCustomer);
+                            Location reverseEnd = bestNeighbor;
 
-                        worker.InvertOrder(reverseStart, reverseEnd, bestDistanceDelta);
-                        madeChange = true;
+                            if (worker.PositionOf(bestCustomer) > worker.PositionOf(bestNeighbor))
+                            {
+                                reverseStart = worker.CustomerAfter(bestNeighbor);
+                                reverseEnd = bestCustomer;
+                            }
+
+                            worker.InvertOrder(reverseStart, reverseEnd, bestDistanceDelta);
+
+                            madeChange = true;
+                        }
                     }
                 }
                 while (madeChange);
@@ -285,8 +281,6 @@ namespace TravelingAssemblyMen.Model
                         Location candidate = null;
                         Double bestDistanceDeltaThis = 0;
                         Double bestDistanceDeltaOther = 0;
-                        Double bestFitnessDeltaThis = 0;
-                        Double bestFitnessDeltaOther = 0;
 
                         for (int neighborOffset = 1; neighborOffset <= neighborhoodRange; neighborOffset++)
                         {
@@ -301,21 +295,12 @@ namespace TravelingAssemblyMen.Model
                             Assembler swapPartner = Processes(swapCustomer);
 
                             Double newRawDistanceDeltaThis = worker.DistanceDelta(currentCustomer, swapCustomer);
-                            Double newDistanceDeltaThis = newRawDistanceDeltaThis * _overallDistanceWeight;
-                            Double newWorkloadDeltaThis = (newRawDistanceDeltaThis / 50) + (Math.Max((worker.Workload + (newRawDistanceDeltaThis / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
-                            Double newFitnessDeltaThis = newDistanceDeltaThis + newWorkloadDeltaThis;
-
                             Double newRawDistanceDeltaOther = swapPartner.DistanceDelta(swapCustomer, currentCustomer);
-                            Double newDistanceDeltaOther = newRawDistanceDeltaOther * _overallDistanceWeight;
-                            Double newWorkloadDeltaOther = (newRawDistanceDeltaOther / 50) + (Math.Max((swapPartner.Workload + (newRawDistanceDeltaOther / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(swapPartner.Workload - 8, 0) * _overtimePenaltyWeight);
-                            Double newFitnessDeltaOther = newDistanceDeltaOther + newWorkloadDeltaOther;
                             
-                            if (newFitnessDeltaThis + newFitnessDeltaOther < bestFitnessDeltaThis + bestFitnessDeltaOther)
+                            if (newRawDistanceDeltaThis + newRawDistanceDeltaOther < bestDistanceDeltaThis + bestDistanceDeltaOther)
                             {
                                 bestDistanceDeltaThis = newRawDistanceDeltaThis;
                                 bestDistanceDeltaOther = newRawDistanceDeltaOther;
-                                bestFitnessDeltaThis = newFitnessDeltaThis;
-                                bestFitnessDeltaOther = newFitnessDeltaOther;
                                 candidate = swapCustomer;
                                 foundCandidate = true;
                             }
@@ -410,7 +395,7 @@ namespace TravelingAssemblyMen.Model
 
             if (worker.CustomersAssigned.Count > 0)
             {
-                distanceDelta -= _task.DistanceBetween(worker.CustomerBefore(worker.LastCustomer), worker.LastCustomer) + _task.DistanceBetween(worker.LastCustomer, Location.HQ);
+                distanceDelta -= _task.DistanceBetween(worker.LastCustomer, Location.HQ);
                 distanceDelta += _task.DistanceBetween(worker.LastCustomer, customer) + _task.DistanceBetween(customer, Location.HQ);
             }
             else

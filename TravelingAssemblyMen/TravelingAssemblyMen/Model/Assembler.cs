@@ -180,12 +180,32 @@ namespace TravelingAssemblyMen.Model
         {
             int indexOfCustomer = _customersAssigned.IndexOf(customer);
 
+            if (Location.HQ.Equals(customer))
+            {
+                return CustomerAt(0);
+            }
+
+            if (!_customersAssigned.Contains(customer))
+            {
+                return null;
+            }
+
             return CustomerAt(indexOfCustomer + 1);
         }
 
         public Location CustomerBefore(Location customer)
         {
             int indexOfCustomer = _customersAssigned.IndexOf(customer);
+
+            if (Location.HQ.Equals(customer))
+            {
+                return LastCustomer;
+            }
+
+            if (!_customersAssigned.Contains(customer))
+            {
+                return null;
+            }
 
             return CustomerAt(indexOfCustomer - 1);
         }
