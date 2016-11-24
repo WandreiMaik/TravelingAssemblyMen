@@ -94,6 +94,12 @@ namespace TravelingAssemblyMen.Model
 
             List<Location> unassignedCustomers = _task.Customers.ToList();
             Assembler currentAssembler;
+            int numberOfAssignedCustomers = _task.Customers.Count / _team.Count;
+
+            if (_task.Customers.Count % _team.Count > 0)
+            {
+                numberOfAssignedCustomers++;
+            }
 
             //asign first customer to each assembler corresponding to their starting positions
             for (int assemblerIndex = 0; assemblerIndex < _team.Count; assemblerIndex++)
@@ -106,13 +112,35 @@ namespace TravelingAssemblyMen.Model
                 }
             }
 
+            List<List<List<DistanceMatrixEntry>>> modifiedDistanceMatrices = new List<List<List<DistanceMatrixEntry>>>();
+
+            foreach (Assembler worker in _team)
+            {
+                List<List<DistanceMatrixEntry>> modifiedDistanceMatrix = new List<List<DistanceMatrixEntry>>();
+
+                foreach (List<DistanceMatrixEntry> customersDistances in _task.DistanceMatrix)
+                {
+                    List<DistanceMatrixEntry> modifiedDistances = new List<DistanceMatrixEntry>();
+
+                    foreach(DistanceMatrixEntry distance in customersDistances)
+                    {
+                        modifiedDistances.Add(new DistanceMatrixEntry(distance.Customer, distance.Distance + 3 * distance.Customer.DistanceTo(worker.StartingPosition)));
+                    }
+
+                    modifiedDistanceMatrix.Add(modifiedDistances);
+                }
+
+                modifiedDistanceMatrices.Add(modifiedDistanceMatrix);
+            }
+
             int roundRobin = 0;
 
-            while (unassignedCustomers.Count > 0)
+            while (unassignedCustomers.Count != 0)
             {
-                currentAssembler = _team[roundRobin];
+                Assembler worker = _team[roundRobin];
+                Location nextCustomer = FindClosestUnassigned(worker.LastCustomer, worker.StartingPosition, unassignedCustomers, modifiedDistanceMatrices[roundRobin]);
 
-                AssignTask(FindClosestUnassigned(currentAssembler.LastCustomer, currentAssembler.StartingPosition, unassignedCustomers), currentAssembler, unassignedCustomers);
+                AssignTask(nextCustomer, worker, unassignedCustomers);
 
                 roundRobin = (roundRobin + 1) % _team.Count;
             }
@@ -172,25 +200,17 @@ namespace TravelingAssemblyMen.Model
 
             return closestNeighbor;
         }
-
-
-        private Location FindClosestUnassigned(Location customer, Location startingPosition, List<Location> unassignedCustomers)
+        
+        private Location FindClosestUnassigned(Location customer, Location startingPosition, List<Location> unassignedCustomers, List<List<DistanceMatrixEntry>> modifiedDistances)
         {
-            Location closestNeighbor = null;
-            Double closestNeighborDistance = Double.MaxValue;
+            List<DistanceMatrixEntry> Neighbors = _task.Distances(customer).Where(dist => unassignedCustomers.Contains(dist.Customer)).ToList();
 
-            foreach (Location newNeighbor in unassignedCustomers)
+            if (Neighbors.First().Customer.Equals(Location.HQ))
             {
-                Double newNeighborDistance = _task.DistanceBetween(customer, newNeighbor) + _task.DistanceBetween(startingPosition, newNeighbor);
-
-                if (newNeighborDistance < closestNeighborDistance)
-                {
-                    closestNeighbor = newNeighbor;
-                    closestNeighborDistance = newNeighborDistance;
-                }
+                return Neighbors.Skip(1).First().Customer;
             }
 
-            return closestNeighbor;
+            return Neighbors.First().Customer;
         }
 
         public void TwoOpt(int neighborhoodRange)
@@ -282,7 +302,7 @@ namespace TravelingAssemblyMen.Model
                         Double bestDistanceDeltaThis = 0;
                         Double bestDistanceDeltaOther = 0;
 
-                        for (int neighborOffset = 1; neighborOffset <= neighborhoodRange; neighborOffset++)
+                        for (int neighborOffset = 0; neighborOffset < neighborhoodRange; neighborOffset++)
                         {
                             Location currentCustomer = worker.CustomerAt(customerindex);
                             Location swapCustomer = FindGlobalNeighbor(currentCustomer, neighborOffset);
@@ -292,10 +312,10 @@ namespace TravelingAssemblyMen.Model
                                 break;
                             }
 
-                            Assembler swapPartner = Processes(swapCustomer);
+                            Assembler swapPartner = ProcessorOf(swapCustomer);
 
-                            Double newRawDistanceDeltaThis = worker.DistanceDelta(currentCustomer, swapCustomer);
-                            Double newRawDistanceDeltaOther = swapPartner.DistanceDelta(swapCustomer, currentCustomer);
+                            Double newRawDistanceDeltaThis = DistanceDelta(worker, currentCustomer, swapCustomer);
+                            Double newRawDistanceDeltaOther = DistanceDelta(swapPartner, swapCustomer, currentCustomer);
                             
                             if (newRawDistanceDeltaThis + newRawDistanceDeltaOther < bestDistanceDeltaThis + bestDistanceDeltaOther)
                             {
@@ -308,7 +328,7 @@ namespace TravelingAssemblyMen.Model
 
                         if (foundCandidate)
                         {
-                            Assembler swapPartner = Processes(candidate);
+                            Assembler swapPartner = ProcessorOf(candidate);
                             Location customer = worker.CustomerAt(customerindex);
 
                             worker.Swap(customer, candidate, bestDistanceDeltaThis);
@@ -324,30 +344,17 @@ namespace TravelingAssemblyMen.Model
         }
 
         /// <summary>
-        /// Returns the nth next customer in the assigned customers towards the parameter customer. 
-        /// Beware that the offset 0 will result in the customer itself if it is in the list of customers;
+        /// Returns the nth next neighboring customer of all other subroutes
         /// </summary>
         /// <param name="customer">The customers who's next neighbors are looked up.</param>
         /// <param name="offset">The offset how close the neighbor should be in the ranking.</param>
         /// <returns>The neighbor with an offset in the ranking.</returns>
         private Location FindGlobalNeighbor(Location customer, Int32 offset)
         {
-            Assembler processesCustomer = Processes(customer);
-            List<Location> ranking = _task.Customers.Where(c => Processes(c) != processesCustomer).ToList();
+            Assembler worker = ProcessorOf(customer);
+            List<DistanceMatrixEntry> distances = _task.Distances(customer).Where(dist => ProcessorOf(dist.Customer) != worker).ToList();
 
-            ranking = ranking.OrderBy(l => _task.DistanceBetween(l, customer)).ToList();
-            
-            if (ranking.Count == 0)
-            {
-                return Location.HQ;
-            }
-
-            if (offset >= ranking.Count)
-            {
-                return ranking.Last();
-            }
-
-            return ranking[offset];
+            return distances[offset].Customer;
         }
         
         /// <summary>
@@ -360,23 +367,9 @@ namespace TravelingAssemblyMen.Model
         /// <returns>The neighbor with an offset in the ranking.</returns>
         private List<Location> FindSubrouteNeighbors(Location customer, Int32 maxOffset, params Assembler[] subroutes)
         {
-            List<Location> ranking = new List<Location>();
+            List<DistanceMatrixEntry> distances = _task.Distances(customer).Where(dist => subroutes.Contains(ProcessorOf(dist.Customer))).ToList();
 
-            foreach (Assembler route in subroutes)
-            {
-                ranking.AddRange(route.CustomersAssigned);
-            }
-
-            ranking.Remove(customer);
-            ranking = ranking.OrderBy(l => _task.DistanceBetween(l, customer)).ToList();
-
-            if (maxOffset >= ranking.Count)
-            {
-                return ranking;
-            }
-
-            ranking.RemoveRange(maxOffset, ranking.Count - maxOffset);
-            return ranking;
+            return (from distanceEntry in distances select distanceEntry.Customer).Take(maxOffset).ToList();
         }
         
         public Double DistanceDelta(Location piOfI, Location piOfIPlusOne, Location piOfJ, Location piOfJPlusOne)
@@ -387,6 +380,31 @@ namespace TravelingAssemblyMen.Model
             fitnessDelta += _task.DistanceBetween(piOfI, piOfJ) + _task.DistanceBetween(piOfIPlusOne, piOfJPlusOne);
 
             return fitnessDelta;
+        }
+
+        /// <summary>
+        /// Calculates the resulting distance delta if a swap of insertedCustomer with removedCustomer would occur.
+        /// </summary>
+        /// <param name="worker">The assembler which is processing the removed customer and is supposed to take over insertedCustomer</param>
+        /// <param name="removedCustomer">The customer which will be removed.</param>
+        /// <param name="insertedCustomer">The customer which will be added.</param>
+        /// <returns>The delta of the raw distance value.</returns>
+        public Double DistanceDelta(Assembler worker, Location removedCustomer, Location insertedCustomer)
+        {
+            Double distanceDelta = 0;
+
+            Location predecessor = worker.CustomerBefore(removedCustomer);
+            Location successor = worker.CustomerAfter(removedCustomer);
+
+            distanceDelta -=
+                _task.DistanceBetween(predecessor, removedCustomer) +
+                _task.DistanceBetween(removedCustomer, successor);
+
+            distanceDelta +=
+                _task.DistanceBetween(predecessor, insertedCustomer) +
+                _task.DistanceBetween(insertedCustomer, successor);
+
+            return distanceDelta;
         }
 
         private void AssignTask(Location customer, Assembler worker, List<Location> unassignedCustomers)
@@ -407,7 +425,7 @@ namespace TravelingAssemblyMen.Model
             unassignedCustomers.Remove(customer);
         }
 
-        private Assembler Processes(Location customer)
+        private Assembler ProcessorOf(Location customer)
         {
             foreach (Assembler worker in _team)
             {

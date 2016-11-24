@@ -53,6 +53,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\DistanceMatrixEntry.cs" />
     <Compile Include="Model\LocalOptimisationStyle.cs" />
     <Compile Include="Model\Assembler.cs" />
     <Compile Include="Model\ColorPicker.cs" />

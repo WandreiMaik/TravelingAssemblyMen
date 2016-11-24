@@ -13,7 +13,7 @@ namespace TravelingAssemblyMen.Model
     {
         private List<Location> _customerList;
         private Solution _solution;
-        private Double[,] _distanceMatrix;
+        private List<List<DistanceMatrixEntry>> _distanceMatrix;
 
         public Int32 NumberOfCustomers
         {
@@ -36,6 +36,14 @@ namespace TravelingAssemblyMen.Model
             get
             {
                 return _customerList;
+            }
+        }
+
+        public List<List<DistanceMatrixEntry>> DistanceMatrix
+        {
+            get
+            {
+                return _distanceMatrix;
             }
         }
 
@@ -102,28 +110,67 @@ namespace TravelingAssemblyMen.Model
         
         private void CalculateDistanceMatrix()
         {
-            _distanceMatrix = new Double[_customerList.Count, _customerList.Count];
+            _distanceMatrix = new List<List<DistanceMatrixEntry>>();
 
-            for (int horizontalIndex = 0; horizontalIndex < _customerList.Count; horizontalIndex++)
+            foreach (Location customer in _customerList)
             {
-                for (int verticalIndex = 0; verticalIndex < _customerList.Count; verticalIndex++)
+                List<DistanceMatrixEntry> distances = new List<DistanceMatrixEntry>();
+
+                distances.Add(new DistanceMatrixEntry(Location.HQ, customer));
+
+                foreach (Location comparate in _customerList)
                 {
-                    _distanceMatrix[horizontalIndex, verticalIndex] = _customerList[horizontalIndex].DistanceTo(_customerList[verticalIndex]);
+                    if (comparate.Equals(customer))
+                    {
+                        continue;
+                    }
+
+                    distances.Add(new DistanceMatrixEntry(comparate, customer));
                 }
+
+                _distanceMatrix.Add(distances.OrderBy(entry => entry.Distance).ToList());
             }
+
+            // distances from HQ to all customers are inside the last entry
+            List<DistanceMatrixEntry> hqDistances = new List<DistanceMatrixEntry>();
+
+            foreach (Location comparate in _customerList)
+            {
+                hqDistances.Add(new DistanceMatrixEntry(comparate, Location.HQ));
+            }
+
+            _distanceMatrix.Add(hqDistances.OrderBy(entry => entry.Distance).ToList());
         }
 
         public Double DistanceBetween(Location one, Location another)
         {
             Int32 oneIndex = _customerList.IndexOf(one);
-            Int32 anotherIndex = _customerList.IndexOf(another);
 
-            if (oneIndex < 0 || anotherIndex < 0)
+            if (one.Equals(Location.HQ))
+            {
+                oneIndex = _customerList.Count;
+            }
+
+            if (oneIndex == -1)
             {
                 return one.DistanceTo(another);
             }
 
-            return _distanceMatrix[oneIndex, anotherIndex];
+            List<DistanceMatrixEntry> test = _distanceMatrix[oneIndex].Where(dist => dist.Customer.Equals(another)).ToList();
+
+            return test.First().Distance;
+        }
+
+        public List<DistanceMatrixEntry> Distances(Location customer)
+        {
+            Int32 customerIndex = _customerList.IndexOf(customer);
+
+            if (customer.Equals(Location.HQ))
+            {
+                customerIndex = _customerList.Count;
+            }
+
+            return _distanceMatrix[customerIndex];
         }
 
         #region IO

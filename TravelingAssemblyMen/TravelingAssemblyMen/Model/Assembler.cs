@@ -124,18 +124,28 @@ namespace TravelingAssemblyMen.Model
 
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
             _travelDistance += distanceDelta;
+            Double realDistanceTraveled = CalculateDistanceTraveled();
+
+            if (_travelDistance != realDistanceTraveled)
+            {
+                double diff = realDistanceTraveled - _travelDistance;
+            }
         }
 
-        public void Swap(Location customer, Location swapper, Double distanceDelta)
+        public void Swap(Location removedCustomer, Location insertedCustomer, Double distanceDelta)
         {
-            Int32 customerIndex = _customersAssigned.IndexOf(customer);
+            Int32 customerIndex = _customersAssigned.IndexOf(removedCustomer);
 
-            _customersAssigned.Remove(customer);
-            _customersAssigned.Insert(customerIndex, swapper);
+            _customersAssigned.Remove(removedCustomer);
+            _customersAssigned.Insert(customerIndex, insertedCustomer);
             
             _travelDistance += distanceDelta;
+            Double realDistanceTraveled = CalculateDistanceTraveled();
 
-            return;
+            if (_travelDistance != realDistanceTraveled)
+            {
+                double diff = realDistanceTraveled - _travelDistance;
+            }
         } 
         #endregion
 
@@ -166,6 +176,23 @@ namespace TravelingAssemblyMen.Model
         #endregion
 
         #region Utility
+        public Location CustomerBefore(Location customer)
+        {
+            int indexOfCustomer = _customersAssigned.IndexOf(customer);
+
+            if (Location.HQ.Equals(customer))
+            {
+                return LastCustomer;
+            }
+
+            if (!_customersAssigned.Contains(customer))
+            {
+                return null;
+            }
+
+            return CustomerAt(indexOfCustomer - 1);
+        }
+
         public Location CustomerAt(int index)
         {
             if (index == -1 || index == _customersAssigned.Count)
@@ -193,23 +220,6 @@ namespace TravelingAssemblyMen.Model
             return CustomerAt(indexOfCustomer + 1);
         }
 
-        public Location CustomerBefore(Location customer)
-        {
-            int indexOfCustomer = _customersAssigned.IndexOf(customer);
-
-            if (Location.HQ.Equals(customer))
-            {
-                return LastCustomer;
-            }
-
-            if (!_customersAssigned.Contains(customer))
-            {
-                return null;
-            }
-
-            return CustomerAt(indexOfCustomer - 1);
-        }
-
         public Int32 PositionOf(Location customer)
         {
             return _customersAssigned.IndexOf(customer);
@@ -220,28 +230,16 @@ namespace TravelingAssemblyMen.Model
             return _customersAssigned.Contains(customer);
         } 
 
-        /// <summary>
-        /// Calculates the resulting distance delta if a swap of thisCustomer with otherCustomer would occur.
-        /// </summary>
-        /// <param name="thisCustomer">The customer which will be removed.</param>
-        /// <param name="otherCustomer">The customer which will be added.</param>
-        /// <returns>The delta of the fitness value as a raw distance value.</returns>
-        public Double DistanceDelta(Location thisCustomer, Location otherCustomer)
+        private Double CalculateDistanceTraveled()
         {
-            Double distanceDelta = 0;
+            Double distanceTraveled = Location.HQ.DistanceTo(_customersAssigned.First());
 
-            Location thisPredecessor = this.CustomerBefore(thisCustomer);
-            Location thisSuccessor = this.CustomerAfter(thisCustomer);
+            foreach(Location customer in _customersAssigned)
+            {
+                distanceTraveled += customer.DistanceTo(CustomerAfter(customer));
+            }
 
-            distanceDelta -= 
-                thisPredecessor.DistanceTo(thisCustomer) + 
-                thisCustomer.DistanceTo(thisSuccessor);
-
-            distanceDelta +=
-                thisPredecessor.DistanceTo(otherCustomer) +
-                otherCustomer.DistanceTo(thisSuccessor);
-
-            return distanceDelta;
+            return distanceTraveled;
         }
         #endregion
     }
