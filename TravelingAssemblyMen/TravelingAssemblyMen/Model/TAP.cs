@@ -148,7 +148,12 @@ namespace TravelingAssemblyMen.Model
 
             if (one.Equals(Location.HQ))
             {
-                oneIndex = _customerList.Count;
+                return _distanceMatrix[_customerList.Count].Where(dist => dist.Customer.Equals(another)).First().Distance;
+            }
+
+            if (another.Equals(Location.HQ))
+            {
+                return _distanceMatrix[_customerList.Count].Where(dist => dist.Customer.Equals(one)).First().Distance;
             }
 
             if (oneIndex == -1)
@@ -156,9 +161,7 @@ namespace TravelingAssemblyMen.Model
                 return one.DistanceTo(another);
             }
 
-            List<DistanceMatrixEntry> test = _distanceMatrix[oneIndex].Where(dist => dist.Customer.Equals(another)).ToList();
-
-            return test.First().Distance;
+            return _distanceMatrix[oneIndex].Where(dist => dist.Customer.Equals(another)).First().Distance;
         }
 
         public List<DistanceMatrixEntry> Distances(Location customer)

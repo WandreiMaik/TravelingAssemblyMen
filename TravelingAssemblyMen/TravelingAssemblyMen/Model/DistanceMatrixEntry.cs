@@ -38,5 +38,10 @@ namespace TravelingAssemblyMen.Model
             _customer = distanceToCustomer;
             _distance = distance;
         }
+
+        public override String ToString()
+        {
+            return Customer.ToString() + " Distance: " + Distance.ToString();
+        }
     }
 }

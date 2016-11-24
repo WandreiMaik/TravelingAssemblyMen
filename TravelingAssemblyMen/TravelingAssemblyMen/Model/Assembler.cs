@@ -14,7 +14,8 @@ namespace TravelingAssemblyMen.Model
         private List<Location> _customersAssigned;
         private Double _workload;
         private Double _travelDistance;
-        private Location _startingPosition; 
+        private Location _startingPosition;
+        private TAP _task;
         #endregion
 
         #region Properties
@@ -80,13 +81,14 @@ namespace TravelingAssemblyMen.Model
         #endregion
 
         #region Constructors
-        public Assembler()
+        public Assembler(TAP task)
         {
             _customersAssigned = new List<Location>();
             _workload = 0;
+            _task = task;
         }
 
-        public Assembler(Location startingPosition) : this()
+        public Assembler(Location startingPosition, TAP task) : this(task)
         {
             _startingPosition = startingPosition;
         } 
@@ -132,19 +134,20 @@ namespace TravelingAssemblyMen.Model
             }
         }
 
-        public void Swap(Location removedCustomer, Location insertedCustomer, Double distanceDelta)
+        public void Swap(Location removeCustomer, Location insertCustomer, Int32 insertIndex, Double distanceDelta)
         {
-            Int32 customerIndex = _customersAssigned.IndexOf(removedCustomer);
 
-            _customersAssigned.Remove(removedCustomer);
-            _customersAssigned.Insert(customerIndex, insertedCustomer);
+            Location customerBeforeRemoved = CustomerBefore(removeCustomer);
+            Location customerAfterRemoved = CustomerAfter(removeCustomer);
             
-            _travelDistance += distanceDelta;
-            Double realDistanceTraveled = CalculateDistanceTraveled();
+            _customersAssigned.Remove(removeCustomer);
+            _customersAssigned.Insert(insertIndex, insertCustomer);
 
-            if (_travelDistance != realDistanceTraveled)
+            _travelDistance += distanceDelta;
+
+            if (_travelDistance != CalculateDistanceTraveled())
             {
-                double diff = realDistanceTraveled - _travelDistance;
+                double diff = 0;
             }
         } 
         #endregion
@@ -227,16 +230,16 @@ namespace TravelingAssemblyMen.Model
 
         public bool Processes(Location customer)
         {
-            return _customersAssigned.Contains(customer);
+            return _customersAssigned.Contains(customer) || customer.Equals(Location.HQ);
         } 
 
         private Double CalculateDistanceTraveled()
         {
-            Double distanceTraveled = Location.HQ.DistanceTo(_customersAssigned.First());
+            Double distanceTraveled = _task.DistanceBetween(Location.HQ, _customersAssigned[0]);
 
             foreach(Location customer in _customersAssigned)
             {
-                distanceTraveled += customer.DistanceTo(CustomerAfter(customer));
+                distanceTraveled += _task.DistanceBetween(customer, CustomerAfter(customer));
             }
 
             return distanceTraveled;
