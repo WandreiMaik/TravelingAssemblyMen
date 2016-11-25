@@ -12,7 +12,6 @@ namespace TravelingAssemblyMen.Model
     {
         #region Fields
         private List<Location> _customersAssigned;
-        private Double _workload;
         private Double _travelDistance;
         private Location _startingPosition;
         private TAP _task;
@@ -36,12 +35,7 @@ namespace TravelingAssemblyMen.Model
         {
             get
             {
-                return _workload;
-            }
-
-            set
-            {
-                _workload = value;
+                return _customersAssigned.Count * 0.5d;
             }
         }
 
@@ -84,7 +78,6 @@ namespace TravelingAssemblyMen.Model
         public Assembler(TAP task)
         {
             _customersAssigned = new List<Location>();
-            _workload = 0;
             _task = task;
         }
 
@@ -98,24 +91,28 @@ namespace TravelingAssemblyMen.Model
         public void AcceptTask(Location newCustomer, Double distanceDelta)
         {
             _customersAssigned.Add(newCustomer);
-
-            _workload += 0.5;
+            
             _travelDistance += distanceDelta;
         }
         
         public void RemoveTask(Location lostCustomer, Double distanceDelta)
         {
             _customersAssigned.Remove(lostCustomer);
-
-            _workload -= 0.5;
+            
             _travelDistance += distanceDelta;
         }
 
         public void RemoveEveryTask()
         {
             _customersAssigned.Clear();
-            _workload = 0;
             _travelDistance = 0;
+        }
+        
+        public void InsertTask(Location insertedCustomer, int index, double distanceDelta)
+        {
+            _customersAssigned.Insert(index, insertedCustomer);
+
+            _travelDistance += distanceDelta;
         }
 
         public void InvertOrder(Location firstReversed, Location lastReversed, Double distanceDelta)
@@ -125,7 +122,6 @@ namespace TravelingAssemblyMen.Model
 
             _customersAssigned.Reverse(startIndex, endIndex - startIndex + 1);
             _travelDistance += distanceDelta;
-            Double realDistanceTraveled = CalculateDistanceTraveled();
         }
 
         public void Swap(Location removeCustomer, Location insertCustomer, Int32 insertIndex, Double distanceDelta)

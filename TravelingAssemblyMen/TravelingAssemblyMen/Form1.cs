@@ -175,5 +175,12 @@ namespace TravelingAssemblyMen
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
+
+        private void buttonInsert_Click(object sender, EventArgs e)
+        {
+            _problem.LocalOptimisation(LocalOptimisationStyle.Insert, (int)numericUpDownNeighborhoodRange.Value);
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
+        }
     }
 }

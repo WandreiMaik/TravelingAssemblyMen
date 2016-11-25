@@ -280,8 +280,6 @@ namespace TravelingAssemblyMen.Model
 
         public void SwapOpt(int neighborhoodRange)
         {
-            // swapping results in wrong fitness deltas (as it seems because they increase ._.
-            // TODO FIX YA SHIZZLE
             if (_team.Count < 2)
             {
                 return;
@@ -358,6 +356,70 @@ namespace TravelingAssemblyMen.Model
             while (madeChange);
         }
 
+        public void InsertOpt(int neighborhoodRange)
+        {
+            if (_team.Count < 2)
+            {
+                return;
+            }
+
+            bool madeChange;
+
+            do
+            {
+                madeChange = false;
+
+                bool foundCandidate = false;
+                Location bestMovedCustomer = null;
+                Assembler bestInsertPartner = null;
+                Double bestDistanceDeltaInsert = 0;
+                Double bestDistanceDeltaRemove = 0;
+                Int32 bestInsertIndex = -1;
+
+                foreach (Location movedCustomer in _task.Customers)
+                {
+                    Assembler worker = ProcessorOf(movedCustomer);
+
+                    for (int neighborOffset = 0; neighborOffset < neighborhoodRange; neighborOffset++)
+                    {
+                        Location insertNeighbor = FindGlobalNeighbor(movedCustomer, neighborOffset);
+
+                        Assembler insertInto = ProcessorOf(insertNeighbor);
+
+                        List<DistanceMatrixEntry> insertCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(movedCustomer)];
+
+                        Int32 InsertIndex = -1;
+
+                        Double newRawDistanceDeltaRemove = DistanceDelta(worker, movedCustomer);
+                        Double newRawDistanceDeltaInsert = DistanceDelta(insertInto, movedCustomer, insertCustomerDistances, out InsertIndex);
+
+                        if (newRawDistanceDeltaRemove + newRawDistanceDeltaInsert < bestDistanceDeltaInsert + bestDistanceDeltaRemove)
+                        {
+                            bestDistanceDeltaRemove = newRawDistanceDeltaRemove;
+                            bestDistanceDeltaInsert = newRawDistanceDeltaInsert;
+                            bestMovedCustomer = movedCustomer;
+                            bestInsertPartner = insertInto;
+                            bestInsertIndex = InsertIndex;
+                            foundCandidate = true;
+                        }
+                    }
+                }
+
+                if (foundCandidate)
+                {
+                    Assembler worker = ProcessorOf(bestMovedCustomer);
+                    List<DistanceMatrixEntry> insertCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(bestMovedCustomer)];
+
+                    worker.RemoveTask(bestMovedCustomer, bestDistanceDeltaRemove);
+
+                    bestInsertPartner.InsertTask(bestMovedCustomer, bestInsertIndex, bestDistanceDeltaInsert);
+
+                    madeChange = true;
+                }
+            }
+            while (madeChange);
+        }
+
         /// <summary>
         /// Returns the nth next neighboring customer of all other subroutes
         /// </summary>
@@ -369,7 +431,12 @@ namespace TravelingAssemblyMen.Model
             Assembler worker = ProcessorOf(customer);
             List<DistanceMatrixEntry> distances = _task.Distances(customer).Where(dist => ProcessorOf(dist.Customer) != worker).ToList();
 
-            return distances[offset].Customer;
+            if (offset < distances.Count)
+            {
+                return distances[offset].Customer;
+            }
+
+            return distances.Last().Customer;
         }
         
         /// <summary>
@@ -398,11 +465,14 @@ namespace TravelingAssemblyMen.Model
         }
 
         /// <summary>
-        /// Calculates the resulting distance delta if a swap of insertedCustomer with removedCustomer would occur.
+        /// Calculates the resulting distance delta if a swap of insertedCustomer with removedCustomer would occur. The Insert position will be 
+        /// calculated by taking the neighbor of the inserted customer into account and check for two options, before or after that neighbor.
         /// </summary>
         /// <param name="worker">The assembler which is processing the removed customer and is supposed to take over insertedCustomer</param>
         /// <param name="removedCustomer">The customer which will be removed.</param>
         /// <param name="insertedCustomer">The customer which will be added.</param>
+        /// <param name="insertedDistanceMatrix">The List of distances correlating towards the inserted customer.</param>
+        /// <param name="insertedIndex">The out parameters determining the insert position used to calculate the delta.</param>
         /// <returns>The delta of the raw distance value.</returns>
         public Double DistanceDelta(Assembler worker, Location removedCustomer, Location insertedCustomer, List<DistanceMatrixEntry> insertedDistanceMatrix, out Int32 insertedIndex)
         {
@@ -458,6 +528,72 @@ namespace TravelingAssemblyMen.Model
 
             return distanceDelta;
         }
+
+        /// <summary>
+        /// Calculates the resulting distance delta if a insert of insertedCustomer in worker would occur. The Insert position will be 
+        /// calculated by taking the neighbor of the inserted customer into account and check for two options, before or after that neighbor.
+        /// </summary>
+        /// <param name="worker">The assembler which is processing the removed customer and is supposed to take over insertedCustomer</param>
+        /// <param name="insertedCustomer">The customer which will be added.</param>
+        /// <param name="insertedDistanceMatrix">The List of distances correlating towards the inserted customer.</param>
+        /// <param name="insertedIndex">The out parameters determining the insert position used to calculate the delta.</param>
+        /// <returns>The delta of the raw distance value.</returns>
+        public Double DistanceDelta(Assembler worker, Location insertedCustomer, List<DistanceMatrixEntry> insertedDistanceMatrix, out Int32 insertedIndex)
+        {
+            Double distanceDelta = 0;
+
+            Location predecessor = null;
+            Location successor = null;
+
+            foreach (DistanceMatrixEntry neighbor in insertedDistanceMatrix)
+            {
+                if (worker.Processes(neighbor.Customer))
+                {
+                    predecessor = neighbor.Customer;
+                    break;
+                }
+            }
+
+            Location prepredecessor = worker.CustomerBefore(predecessor);
+
+            successor = worker.CustomerAfter(predecessor);
+
+            Double beforePredecessorDelta = prepredecessor.DistanceTo(insertedCustomer) + insertedCustomer.DistanceTo(predecessor) - prepredecessor.DistanceTo(predecessor);
+            Double afterPredecessorDelta = predecessor.DistanceTo(insertedCustomer) + insertedCustomer.DistanceTo(successor) - predecessor.DistanceTo(successor);
+
+            if (beforePredecessorDelta < afterPredecessorDelta)
+            {
+                successor = predecessor;
+                predecessor = prepredecessor;
+            }
+
+            distanceDelta -= _task.DistanceBetween(predecessor, successor);
+            distanceDelta += _task.DistanceBetween(predecessor, insertedCustomer) + _task.DistanceBetween(insertedCustomer, successor);
+
+            insertedIndex = worker.PositionOf(predecessor) + 1;
+
+            return distanceDelta;
+        }
+
+        /// <summary>
+        /// Calculates the resulting distance delta if a remove removedCustomer would occur.
+        /// </summary>
+        /// <param name="worker">The assembler which is processing the removed customer and is supposed to take over insertedCustomer</param>
+        /// <param name="removedCustomer">The customer which will be removed.</param>
+        /// <returns>The delta of the raw distance value.</returns>
+        public Double DistanceDelta(Assembler worker, Location removedCustomer)
+        {
+            Double distanceDelta = 0;
+
+            Location predecessor = worker.CustomerBefore(removedCustomer);
+            Location successor = worker.CustomerAfter(removedCustomer);
+
+            distanceDelta -= _task.DistanceBetween(predecessor, removedCustomer) + _task.DistanceBetween(removedCustomer, successor);
+            distanceDelta += _task.DistanceBetween(predecessor, successor);
+
+            return distanceDelta;
+        }
+
 
         private void AssignTask(Location customer, Assembler worker, List<Location> unassignedCustomers)
         {

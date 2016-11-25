@@ -252,7 +252,7 @@ namespace TravelingAssemblyMen.Model
 
             if (style == LocalOptimisationStyle.Insert)
             {
-                //_solution.InsertOpt(neighborhoodRange);
+                _solution.InsertOpt(neighborhoodRange);
             }
         }
         #endregion

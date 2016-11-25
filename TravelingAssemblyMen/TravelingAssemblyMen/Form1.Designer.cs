@@ -50,7 +50,10 @@
             this.textBoxOvertimePenalty = new System.Windows.Forms.TextBox();
             this.textBoxOverallDistance = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.label5 = new System.Windows.Forms.Label();
+            this.buttonSwap = new System.Windows.Forms.Button();
+            this.button2Opt = new System.Windows.Forms.Button();
             this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
@@ -59,9 +62,7 @@
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonSwap = new System.Windows.Forms.Button();
-            this.button2Opt = new System.Windows.Forms.Button();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.buttonInsert = new System.Windows.Forms.Button();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -73,10 +74,10 @@
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeighborhoodRange)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainLayoutPanel
@@ -392,6 +393,28 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Local Optimisation";
             // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 4;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.button2Opt, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
+            this.tableLayoutPanel6.Controls.Add(this.label5, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 2, 2);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.RowCount = 3;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 102);
+            this.tableLayoutPanel6.TabIndex = 0;
+            // 
             // label5
             // 
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -403,10 +426,36 @@
             this.label5.TabIndex = 1;
             this.label5.Text = "Neighborhoodrange:";
             // 
+            // buttonSwap
+            // 
+            this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonSwap, 2);
+            this.buttonSwap.Enabled = false;
+            this.buttonSwap.Location = new System.Drawing.Point(168, 39);
+            this.buttonSwap.Name = "buttonSwap";
+            this.buttonSwap.Size = new System.Drawing.Size(150, 24);
+            this.buttonSwap.TabIndex = 3;
+            this.buttonSwap.Text = "Swap";
+            this.buttonSwap.UseVisualStyleBackColor = true;
+            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
+            // 
+            // button2Opt
+            // 
+            this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.button2Opt, 2);
+            this.button2Opt.Enabled = false;
+            this.button2Opt.Location = new System.Drawing.Point(6, 39);
+            this.button2Opt.Name = "button2Opt";
+            this.button2Opt.Size = new System.Drawing.Size(150, 24);
+            this.button2Opt.TabIndex = 0;
+            this.button2Opt.Text = "2 - Opt";
+            this.button2Opt.UseVisualStyleBackColor = true;
+            this.button2Opt.Click += new System.EventHandler(this.button2Opt_Click);
+            // 
             // numericUpDownNeighborhoodRange
             // 
             this.numericUpDownNeighborhoodRange.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.numericUpDownNeighborhoodRange.Location = new System.Drawing.Point(246, 6);
+            this.numericUpDownNeighborhoodRange.Location = new System.Drawing.Point(246, 7);
             this.numericUpDownNeighborhoodRange.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -494,52 +543,17 @@
             this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
             this.openFileDialog.Title = "TAP";
             // 
-            // buttonSwap
+            // buttonInsert
             // 
-            this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonSwap, 2);
-            this.buttonSwap.Enabled = false;
-            this.buttonSwap.Location = new System.Drawing.Point(168, 37);
-            this.buttonSwap.Name = "buttonSwap";
-            this.buttonSwap.Size = new System.Drawing.Size(150, 24);
-            this.buttonSwap.TabIndex = 3;
-            this.buttonSwap.Text = "Swap";
-            this.buttonSwap.UseVisualStyleBackColor = true;
-            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
-            // 
-            // button2Opt
-            // 
-            this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.button2Opt, 2);
-            this.button2Opt.Enabled = false;
-            this.button2Opt.Location = new System.Drawing.Point(6, 37);
-            this.button2Opt.Name = "button2Opt";
-            this.button2Opt.Size = new System.Drawing.Size(150, 24);
-            this.button2Opt.TabIndex = 0;
-            this.button2Opt.Text = "2 - Opt";
-            this.button2Opt.UseVisualStyleBackColor = true;
-            this.button2Opt.Click += new System.EventHandler(this.button2Opt_Click);
-            // 
-            // tableLayoutPanel6
-            // 
-            this.tableLayoutPanel6.ColumnCount = 4;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 2, 1);
-            this.tableLayoutPanel6.Controls.Add(this.button2Opt, 0, 1);
-            this.tableLayoutPanel6.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
-            this.tableLayoutPanel6.Controls.Add(this.label5, 1, 0);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 16);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 3;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 102);
-            this.tableLayoutPanel6.TabIndex = 0;
+            this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
+            this.buttonInsert.Location = new System.Drawing.Point(168, 73);
+            this.buttonInsert.Name = "buttonInsert";
+            this.buttonInsert.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert.TabIndex = 4;
+            this.buttonInsert.Text = "Insert";
+            this.buttonInsert.UseVisualStyleBackColor = true;
+            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
             // Form1
             // 
@@ -567,12 +581,12 @@
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.tableLayoutPanel6.ResumeLayout(false);
+            this.tableLayoutPanel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNeighborhoodRange)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
-            this.tableLayoutPanel6.ResumeLayout(false);
-            this.tableLayoutPanel6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -613,6 +627,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.Button buttonSwap;
         private System.Windows.Forms.Button button2Opt;
+        private System.Windows.Forms.Button buttonInsert;
     }
 }
 
