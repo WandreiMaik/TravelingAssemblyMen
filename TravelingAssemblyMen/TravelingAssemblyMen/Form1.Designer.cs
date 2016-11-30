@@ -51,10 +51,11 @@
             this.textBoxOverallDistance = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.label5 = new System.Windows.Forms.Label();
             this.buttonSwap = new System.Windows.Forms.Button();
             this.button2Opt = new System.Windows.Forms.Button();
             this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.buttonInsert = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFitness = new System.Windows.Forms.Label();
@@ -62,7 +63,6 @@
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonInsert = new System.Windows.Forms.Button();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -415,17 +415,6 @@
             this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 102);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
-            // label5
-            // 
-            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.label5.AutoSize = true;
-            this.tableLayoutPanel6.SetColumnSpan(this.label5, 2);
-            this.label5.Location = new System.Drawing.Point(136, 10);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(104, 13);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "Neighborhoodrange:";
-            // 
             // buttonSwap
             // 
             this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -474,6 +463,29 @@
             0,
             0,
             0});
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.label5.AutoSize = true;
+            this.tableLayoutPanel6.SetColumnSpan(this.label5, 2);
+            this.label5.Location = new System.Drawing.Point(136, 10);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(104, 13);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "Neighborhoodrange:";
+            // 
+            // buttonInsert
+            // 
+            this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
+            this.buttonInsert.Location = new System.Drawing.Point(168, 73);
+            this.buttonInsert.Name = "buttonInsert";
+            this.buttonInsert.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert.TabIndex = 4;
+            this.buttonInsert.Text = "Insert";
+            this.buttonInsert.UseVisualStyleBackColor = true;
+            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
             // groupBox2
             // 
@@ -542,18 +554,6 @@
             // 
             this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
             this.openFileDialog.Title = "TAP";
-            // 
-            // buttonInsert
-            // 
-            this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
-            this.buttonInsert.Location = new System.Drawing.Point(168, 73);
-            this.buttonInsert.Name = "buttonInsert";
-            this.buttonInsert.Size = new System.Drawing.Size(150, 24);
-            this.buttonInsert.TabIndex = 4;
-            this.buttonInsert.Text = "Insert";
-            this.buttonInsert.UseVisualStyleBackColor = true;
-            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
             // Form1
             // 

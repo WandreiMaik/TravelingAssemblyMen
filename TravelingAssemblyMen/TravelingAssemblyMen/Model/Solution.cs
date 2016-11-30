@@ -92,57 +92,35 @@ namespace TravelingAssemblyMen.Model
         {
             ResetSolution();
 
-            List<Location> unassignedCustomers = _task.Customers.ToList();
-            Assembler currentAssembler;
-            int numberOfAssignedCustomers = _task.Customers.Count / _team.Count;
-
-            if (_task.Customers.Count % _team.Count > 0)
+            foreach (Location customer in _task.Customers)
             {
-                numberOfAssignedCustomers++;
-            }
+                List<DistanceMatrixEntry> customerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(customer)];
+                List<Double> distanceDeltas = new List<double>();
+                List<Int32> insertedIndices = new List<int>();
 
-            //asign first customer to each assembler corresponding to their starting positions
-            for (int assemblerIndex = 0; assemblerIndex < _team.Count; assemblerIndex++)
-            {
-                if (_task.NumberOfCustomers > assemblerIndex)
+                foreach (Assembler worker in _team)
                 {
-                    currentAssembler = _team[assemblerIndex];
-                    Location nextCustomer = FindClosestUnassigned(currentAssembler.StartingPosition, unassignedCustomers);
-                    AssignTask(nextCustomer, currentAssembler, unassignedCustomers);
-                }
-            }
+                    Int32 insertIndex = -1;
 
-            List<List<List<DistanceMatrixEntry>>> modifiedDistanceMatrices = new List<List<List<DistanceMatrixEntry>>>();
+                    distanceDeltas.Add(DistanceDelta(worker, customer, customerDistances, out insertIndex));
 
-            foreach (Assembler worker in _team)
-            {
-                List<List<DistanceMatrixEntry>> modifiedDistanceMatrix = new List<List<DistanceMatrixEntry>>();
-
-                foreach (List<DistanceMatrixEntry> customersDistances in _task.DistanceMatrix)
-                {
-                    List<DistanceMatrixEntry> modifiedDistances = new List<DistanceMatrixEntry>();
-
-                    foreach(DistanceMatrixEntry distance in customersDistances)
-                    {
-                        modifiedDistances.Add(new DistanceMatrixEntry(distance.Customer, distance.Distance + 3 * distance.Customer.DistanceTo(worker.StartingPosition)));
-                    }
-
-                    modifiedDistanceMatrix.Add(modifiedDistances);
+                    insertedIndices.Add(insertIndex);
                 }
 
-                modifiedDistanceMatrices.Add(modifiedDistanceMatrix);
-            }
+                List<Double> newDistances = new List<double>();
 
-            int roundRobin = 0;
+                foreach (Double distance in distanceDeltas)
+                {
+                    Assembler worker = _team[distanceDeltas.IndexOf(distance)];
 
-            while (unassignedCustomers.Count != 0)
-            {
-                Assembler worker = _team[roundRobin];
-                Location nextCustomer = FindClosestUnassigned(worker.LastCustomer, worker.StartingPosition, unassignedCustomers, modifiedDistanceMatrices[roundRobin]);
+                    newDistances.Add(worker.DistanceTraveled + distance);
+                }
 
-                AssignTask(nextCustomer, worker, unassignedCustomers);
+                Int32 correspondingIndex = newDistances.IndexOf(newDistances.Min());
 
-                roundRobin = (roundRobin + 1) % _team.Count;
+                Assembler insertInto = _team[correspondingIndex];
+
+                insertInto.InsertTask(customer, insertedIndices[correspondingIndex], distanceDeltas[correspondingIndex]);
             }
         }
 
@@ -182,6 +160,7 @@ namespace TravelingAssemblyMen.Model
                 worker.RemoveEveryTask();
             }
         }
+
         private Location FindClosestUnassigned(Location customer, List<Location> unassignedCustomers)
         {
             Location closestNeighbor = null;

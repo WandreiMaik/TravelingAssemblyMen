@@ -170,6 +170,11 @@ namespace TravelingAssemblyMen.Model
 
             if (Location.HQ.Equals(customer))
             {
+                if (_customersAssigned.Count == 0)
+                {
+                    return Location.HQ;
+                }
+
                 return LastCustomer;
             }
 
@@ -194,9 +199,14 @@ namespace TravelingAssemblyMen.Model
         public Location CustomerAfter(Location customer)
         {
             int indexOfCustomer = _customersAssigned.IndexOf(customer);
-
+            
             if (Location.HQ.Equals(customer))
             {
+                if (_customersAssigned.Count == 0)
+                {
+                    return Location.HQ;
+                }
+
                 return CustomerAt(0);
             }
 

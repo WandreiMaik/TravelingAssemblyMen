@@ -146,6 +146,11 @@ namespace TravelingAssemblyMen.Model
         {
             Int32 oneIndex = _customerList.IndexOf(one);
 
+            if (one.Equals(another))
+            {
+                return 0;
+            }
+
             if (one.Equals(Location.HQ))
             {
                 return _distanceMatrix[_customerList.Count].Where(dist => dist.Customer.Equals(another)).First().Distance;
