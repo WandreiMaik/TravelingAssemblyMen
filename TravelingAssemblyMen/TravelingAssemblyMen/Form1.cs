@@ -178,7 +178,21 @@ namespace TravelingAssemblyMen
 
         private void buttonInsert_Click(object sender, EventArgs e)
         {
-            _problem.LocalOptimisation(LocalOptimisationStyle.Insert, (int)numericUpDownNeighborhoodRange.Value);
+            _problem.LocalOptimisation(LocalOptimisationStyle.Insert1, (int)numericUpDownNeighborhoodRange.Value);
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
+        }
+
+        private void buttonInsert2_Click(object sender, EventArgs e)
+        {
+            _problem.LocalOptimisation(LocalOptimisationStyle.Insert3, (int)numericUpDownNeighborhoodRange.Value);
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
+        }
+
+        private void buttonInsert3_Click(object sender, EventArgs e)
+        {
+            _problem.LocalOptimisation(LocalOptimisationStyle.Insert3, (int)numericUpDownNeighborhoodRange.Value);
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }

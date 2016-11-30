@@ -255,9 +255,19 @@ namespace TravelingAssemblyMen.Model
                 _solution.SwapOpt(neighborhoodRange);
             }
 
-            if (style == LocalOptimisationStyle.Insert)
+            if (style == LocalOptimisationStyle.Insert1)
             {
-                _solution.InsertOpt(neighborhoodRange);
+                _solution.Insert1Opt(neighborhoodRange);
+            }
+
+            if (style == LocalOptimisationStyle.Insert2)
+            {
+                _solution.InsertMultipleOpt(neighborhoodRange, 2);
+            }
+
+            if (style == LocalOptimisationStyle.Insert3)
+            {
+                _solution.InsertMultipleOpt(neighborhoodRange, 3);
             }
         }
         #endregion

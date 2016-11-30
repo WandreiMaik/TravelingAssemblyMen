@@ -63,6 +63,8 @@
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.buttonInsert2 = new System.Windows.Forms.Button();
+            this.buttonInsert3 = new System.Windows.Forms.Button();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -388,7 +390,7 @@
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox3.Location = new System.Drawing.Point(3, 268);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(330, 121);
+            this.groupBox3.Size = new System.Drawing.Size(330, 167);
             this.groupBox3.TabIndex = 4;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Local Optimisation";
@@ -400,19 +402,22 @@
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 2, 1);
             this.tableLayoutPanel6.Controls.Add(this.button2Opt, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.label5, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 2, 2);
+            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 0, 2);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert2, 2, 2);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert3, 2, 3);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 3;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 102);
+            this.tableLayoutPanel6.RowCount = 4;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 148);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // buttonSwap
@@ -420,7 +425,7 @@
             this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.buttonSwap, 2);
             this.buttonSwap.Enabled = false;
-            this.buttonSwap.Location = new System.Drawing.Point(168, 39);
+            this.buttonSwap.Location = new System.Drawing.Point(6, 80);
             this.buttonSwap.Name = "buttonSwap";
             this.buttonSwap.Size = new System.Drawing.Size(150, 24);
             this.buttonSwap.TabIndex = 3;
@@ -433,7 +438,7 @@
             this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.button2Opt, 2);
             this.button2Opt.Enabled = false;
-            this.button2Opt.Location = new System.Drawing.Point(6, 39);
+            this.button2Opt.Location = new System.Drawing.Point(6, 43);
             this.button2Opt.Name = "button2Opt";
             this.button2Opt.Size = new System.Drawing.Size(150, 24);
             this.button2Opt.TabIndex = 0;
@@ -444,7 +449,7 @@
             // numericUpDownNeighborhoodRange
             // 
             this.numericUpDownNeighborhoodRange.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.numericUpDownNeighborhoodRange.Location = new System.Drawing.Point(246, 7);
+            this.numericUpDownNeighborhoodRange.Location = new System.Drawing.Point(246, 8);
             this.numericUpDownNeighborhoodRange.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -469,7 +474,7 @@
             this.label5.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.label5.AutoSize = true;
             this.tableLayoutPanel6.SetColumnSpan(this.label5, 2);
-            this.label5.Location = new System.Drawing.Point(136, 10);
+            this.label5.Location = new System.Drawing.Point(136, 12);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(104, 13);
             this.label5.TabIndex = 1;
@@ -479,11 +484,11 @@
             // 
             this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
-            this.buttonInsert.Location = new System.Drawing.Point(168, 73);
+            this.buttonInsert.Location = new System.Drawing.Point(168, 43);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(150, 24);
             this.buttonInsert.TabIndex = 4;
-            this.buttonInsert.Text = "Insert";
+            this.buttonInsert.Text = "Insert (1)";
             this.buttonInsert.UseVisualStyleBackColor = true;
             this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
@@ -491,7 +496,7 @@
             // 
             this.groupBox2.Controls.Add(this.tableLayoutPanel4);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBox2.Location = new System.Drawing.Point(3, 395);
+            this.groupBox2.Location = new System.Drawing.Point(3, 441);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(330, 51);
             this.groupBox2.TabIndex = 3;
@@ -554,6 +559,30 @@
             // 
             this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
             this.openFileDialog.Title = "TAP";
+            // 
+            // buttonInsert2
+            // 
+            this.buttonInsert2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert2, 2);
+            this.buttonInsert2.Location = new System.Drawing.Point(168, 80);
+            this.buttonInsert2.Name = "buttonInsert2";
+            this.buttonInsert2.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert2.TabIndex = 5;
+            this.buttonInsert2.Text = "Insert (2)";
+            this.buttonInsert2.UseVisualStyleBackColor = true;
+            this.buttonInsert2.Click += new System.EventHandler(this.buttonInsert2_Click);
+            // 
+            // buttonInsert3
+            // 
+            this.buttonInsert3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert3, 2);
+            this.buttonInsert3.Location = new System.Drawing.Point(168, 117);
+            this.buttonInsert3.Name = "buttonInsert3";
+            this.buttonInsert3.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert3.TabIndex = 6;
+            this.buttonInsert3.Text = "Insert (3)";
+            this.buttonInsert3.UseVisualStyleBackColor = true;
+            this.buttonInsert3.Click += new System.EventHandler(this.buttonInsert3_Click);
             // 
             // Form1
             // 
@@ -628,6 +657,8 @@
         private System.Windows.Forms.Button buttonSwap;
         private System.Windows.Forms.Button button2Opt;
         private System.Windows.Forms.Button buttonInsert;
+        private System.Windows.Forms.Button buttonInsert2;
+        private System.Windows.Forms.Button buttonInsert3;
     }
 }
 

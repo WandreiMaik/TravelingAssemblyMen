@@ -4,6 +4,8 @@
     {
         TwoOpt,
         Swap,
-        Insert
+        Insert1,
+        Insert2,
+        Insert3
     }
 }

@@ -102,6 +102,16 @@ namespace TravelingAssemblyMen.Model
             _travelDistance += distanceDelta;
         }
 
+        public void RemoveTasks(List<Location> lostCustomers, Double distanceDelta)
+        {
+            foreach (Location customer in lostCustomers)
+            {
+                _customersAssigned.Remove(customer);
+            }
+
+            _travelDistance += distanceDelta;
+        }
+
         public void RemoveEveryTask()
         {
             _customersAssigned.Clear();
@@ -111,6 +121,16 @@ namespace TravelingAssemblyMen.Model
         public void InsertTask(Location insertedCustomer, int index, double distanceDelta)
         {
             _customersAssigned.Insert(index, insertedCustomer);
+
+            _travelDistance += distanceDelta;
+        }
+
+        public void InsertTasks(List<Location> insertedCustomers, int insertIndex, double distanceDelta)
+        {
+            for (int insertedCustomerIndex = 0; insertedCustomerIndex < insertedCustomers.Count; insertedCustomerIndex++)
+            {
+                _customersAssigned.Insert(insertIndex + insertedCustomerIndex, insertedCustomers[insertedCustomerIndex]);
+            }
 
             _travelDistance += distanceDelta;
         }
