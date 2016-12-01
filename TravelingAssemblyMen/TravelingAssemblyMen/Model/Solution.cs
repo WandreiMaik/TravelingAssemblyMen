@@ -372,17 +372,11 @@ namespace TravelingAssemblyMen.Model
                 {
                     Assembler worker = ProcessorOf(movedCustomer);
 
-                    for (int neighborOffset = 0; neighborOffset < neighborhoodRange; neighborOffset++)
+                    List<Assembler> swapPartners = _team.ToList();
+                    swapPartners.Remove(worker);
+
+                    foreach (Assembler swapPartner in swapPartners)
                     {
-                        Location insertNeighbor = FindGlobalNeighbor(movedCustomer, neighborOffset);
-
-                        if (insertNeighbor == null)
-                        {
-                            continue;
-                        }
-
-                        Assembler insertInto = ProcessorOf(insertNeighbor);
-
                         List<DistanceMatrixEntry> insertCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(movedCustomer)];
 
                         Int32 InsertIndex = -1;
@@ -392,9 +386,9 @@ namespace TravelingAssemblyMen.Model
                         Double newWorkloadDeltaRemove = (newDistanceDeltaRemove / 50) + (Math.Max((worker.Workload + (newDistanceDeltaRemove / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
                         Double newFitnessDeltaRemove = newDistanceDeltaRemove + newWorkloadDeltaRemove;
 
-                        Double newRawDistanceDeltaInsert = DistanceDelta(insertInto, movedCustomer, insertCustomerDistances, out InsertIndex);
+                        Double newRawDistanceDeltaInsert = DistanceDelta(swapPartner, movedCustomer, insertCustomerDistances, out InsertIndex);
                         Double newDistanceDeltaInsert = newRawDistanceDeltaInsert * _overallDistanceWeight;
-                        Double newWorkloadDeltaInsert = (newDistanceDeltaInsert / 50) + (Math.Max((insertInto.Workload + (newDistanceDeltaInsert / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(insertInto.Workload - 8, 0) * _overtimePenaltyWeight);
+                        Double newWorkloadDeltaInsert = (newDistanceDeltaInsert / 50) + (Math.Max((swapPartner.Workload + (newDistanceDeltaInsert / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(swapPartner.Workload - 8, 0) * _overtimePenaltyWeight);
                         Double newFitnessDeltaInsert = newDistanceDeltaInsert + newWorkloadDeltaInsert;
 
                         if (newFitnessDeltaRemove + newFitnessDeltaInsert < bestFitnessDeltaInsert + bestFitnessDeltaRemove)
@@ -404,7 +398,7 @@ namespace TravelingAssemblyMen.Model
                             bestFitnessDeltaRemove = newFitnessDeltaRemove;
                             bestFitnessDeltaInsert = newFitnessDeltaInsert;
                             bestMovedCustomer = movedCustomer;
-                            bestInsertPartner = insertInto;
+                            bestInsertPartner = swapPartner;
                             bestInsertIndex = InsertIndex;
                             foundCandidate = true;
                         }
@@ -454,24 +448,17 @@ namespace TravelingAssemblyMen.Model
                     List<Location> movedCustomerList = new List<Location>();
                     movedCustomerList.Add(movedCustomer);
 
-                    while (movedCustomerList.Count < numberOfInserts)
+                    while (movedCustomerList.Count < numberOfInserts && !worker.CustomerAfter(movedCustomerList.Last()).Equals(Location.HQ))
                     {
                         movedCustomerList.Add(worker.CustomerAfter(movedCustomerList.Last()));
                     }
 
-                    if (movedCustomerList.Contains(Location.HQ))
+                    List<Assembler> swapPartners = _team.ToList();
+
+                    List<DistanceMatrixEntry> insertCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(movedCustomer)];
+                        
+                    foreach (Assembler swapPartner in swapPartners)
                     {
-                        continue;
-                    }
-
-                    for (int neighborOffset = 0; neighborOffset < neighborhoodRange; neighborOffset++)
-                    {
-                        Location insertNeighbor = FindGlobalNeighbor(movedCustomer, neighborOffset);
-
-                        Assembler insertInto = ProcessorOf(insertNeighbor);
-
-                        List<DistanceMatrixEntry> insertCustomerDistances = _task.DistanceMatrix[_task.Customers.IndexOf(movedCustomer)];
-
                         Int32 InsertIndex = -1;
 
                         Double newRawDistanceDeltaRemove = DistanceDelta(worker, movedCustomerList.ToArray());
@@ -479,19 +466,19 @@ namespace TravelingAssemblyMen.Model
                         Double newWorkloadDeltaRemove = (newDistanceDeltaRemove / 50) + (Math.Max((worker.Workload + (newDistanceDeltaRemove / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(worker.Workload - 8, 0) * _overtimePenaltyWeight);
                         Double newFitnessDeltaRemove = newDistanceDeltaRemove + newWorkloadDeltaRemove;
 
-                        Double newRawDistanceDeltaInsert = DistanceDelta(insertInto, movedCustomerList, insertCustomerDistances, out InsertIndex);
+                        Double newRawDistanceDeltaInsert = DistanceDelta(swapPartner, movedCustomerList, insertCustomerDistances, out InsertIndex);
                         Double newDistanceDeltaInsert = newRawDistanceDeltaInsert * _overallDistanceWeight;
-                        Double newWorkloadDeltaInsert = (newDistanceDeltaInsert / 50) + (Math.Max((insertInto.Workload + (newDistanceDeltaInsert / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(insertInto.Workload - 8, 0) * _overtimePenaltyWeight);
+                        Double newWorkloadDeltaInsert = (newDistanceDeltaInsert / 50) + (Math.Max((swapPartner.Workload + (newDistanceDeltaInsert / 50)) - 8, 0) * _overtimePenaltyWeight - Math.Max(swapPartner.Workload - 8, 0) * _overtimePenaltyWeight);
                         Double newFitnessDeltaInsert = newDistanceDeltaInsert + newWorkloadDeltaInsert;
 
-                        if (newFitnessDeltaRemove + newFitnessDeltaInsert < bestFitnessDeltaInsert + bestFitnessDeltaRemove &&  !insertInto.Equals(worker))
+                        if (newFitnessDeltaRemove + newFitnessDeltaInsert < bestFitnessDeltaInsert + bestFitnessDeltaRemove && !swapPartner.Equals(worker))
                         {
                             bestDistanceDeltaRemove = newRawDistanceDeltaRemove;
                             bestDistanceDeltaInsert = newRawDistanceDeltaInsert;
                             bestFitnessDeltaRemove = newFitnessDeltaRemove;
                             bestFitnessDeltaInsert = newFitnessDeltaInsert;
                             bestMovedCustomers = movedCustomerList;
-                            bestInsertPartner = insertInto;
+                            bestInsertPartner = swapPartner;
                             bestInsertIndex = InsertIndex;
                             foundCandidate = true;
                         }
@@ -724,7 +711,7 @@ namespace TravelingAssemblyMen.Model
 
             distanceDelta += _task.DistanceBetween(insertedCustomers.Last(), successor);
 
-            insertedIndex = worker.PositionOf(successor);
+            insertedIndex = worker.PositionOf(predecessor) + 1;
 
             return distanceDelta;
         }

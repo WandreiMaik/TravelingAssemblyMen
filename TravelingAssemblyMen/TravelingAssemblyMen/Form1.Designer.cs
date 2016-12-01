@@ -51,11 +51,13 @@
             this.textBoxOverallDistance = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.buttonSwap = new System.Windows.Forms.Button();
-            this.button2Opt = new System.Windows.Forms.Button();
             this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
+            this.button2Opt = new System.Windows.Forms.Button();
             this.buttonInsert = new System.Windows.Forms.Button();
+            this.buttonSwap = new System.Windows.Forms.Button();
+            this.buttonInsert2 = new System.Windows.Forms.Button();
+            this.buttonInsert3 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.labelFitness = new System.Windows.Forms.Label();
@@ -63,8 +65,6 @@
             this.panelSolvedGraph = new System.Windows.Forms.Panel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.buttonInsert2 = new System.Windows.Forms.Button();
-            this.buttonInsert3 = new System.Windows.Forms.Button();
             this.mainLayoutPanel.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBoxManageTAP.SuspendLayout();
@@ -96,7 +96,7 @@
             this.mainLayoutPanel.RowCount = 2;
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainLayoutPanel.Size = new System.Drawing.Size(946, 599);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(945, 598);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -111,7 +111,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.mainLayoutPanel.SetRowSpan(this.flowLayoutPanel1, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 593);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 592);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // groupBoxManageTAP
@@ -191,7 +191,7 @@
             this.numericCustomercount.Size = new System.Drawing.Size(67, 20);
             this.numericCustomercount.TabIndex = 3;
             this.numericCustomercount.Value = new decimal(new int[] {
-            15,
+            30,
             0,
             0,
             0});
@@ -402,13 +402,13 @@
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.Controls.Add(this.button2Opt, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.label5, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 0, 2);
-            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 2, 1);
-            this.tableLayoutPanel6.Controls.Add(this.buttonInsert2, 2, 2);
-            this.tableLayoutPanel6.Controls.Add(this.buttonInsert3, 2, 3);
+            this.tableLayoutPanel6.Controls.Add(this.button2Opt, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 2, 2);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert2, 0, 2);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert3, 0, 3);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
@@ -419,32 +419,6 @@
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(324, 148);
             this.tableLayoutPanel6.TabIndex = 0;
-            // 
-            // buttonSwap
-            // 
-            this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonSwap, 2);
-            this.buttonSwap.Enabled = false;
-            this.buttonSwap.Location = new System.Drawing.Point(6, 80);
-            this.buttonSwap.Name = "buttonSwap";
-            this.buttonSwap.Size = new System.Drawing.Size(150, 24);
-            this.buttonSwap.TabIndex = 3;
-            this.buttonSwap.Text = "Swap";
-            this.buttonSwap.UseVisualStyleBackColor = true;
-            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
-            // 
-            // button2Opt
-            // 
-            this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.button2Opt, 2);
-            this.button2Opt.Enabled = false;
-            this.button2Opt.Location = new System.Drawing.Point(6, 43);
-            this.button2Opt.Name = "button2Opt";
-            this.button2Opt.Size = new System.Drawing.Size(150, 24);
-            this.button2Opt.TabIndex = 0;
-            this.button2Opt.Text = "2 - Opt";
-            this.button2Opt.UseVisualStyleBackColor = true;
-            this.button2Opt.Click += new System.EventHandler(this.button2Opt_Click);
             // 
             // numericUpDownNeighborhoodRange
             // 
@@ -480,17 +454,67 @@
             this.label5.TabIndex = 1;
             this.label5.Text = "Neighborhoodrange:";
             // 
+            // button2Opt
+            // 
+            this.button2Opt.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.button2Opt, 2);
+            this.button2Opt.Enabled = false;
+            this.button2Opt.Location = new System.Drawing.Point(168, 43);
+            this.button2Opt.Name = "button2Opt";
+            this.button2Opt.Size = new System.Drawing.Size(150, 24);
+            this.button2Opt.TabIndex = 0;
+            this.button2Opt.Text = "2 - Opt";
+            this.button2Opt.UseVisualStyleBackColor = true;
+            this.button2Opt.Click += new System.EventHandler(this.button2Opt_Click);
+            // 
             // buttonInsert
             // 
             this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
-            this.buttonInsert.Location = new System.Drawing.Point(168, 43);
+            this.buttonInsert.Location = new System.Drawing.Point(6, 43);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(150, 24);
             this.buttonInsert.TabIndex = 4;
             this.buttonInsert.Text = "Insert (1)";
             this.buttonInsert.UseVisualStyleBackColor = true;
             this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
+            // 
+            // buttonSwap
+            // 
+            this.buttonSwap.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonSwap, 2);
+            this.buttonSwap.Enabled = false;
+            this.buttonSwap.Location = new System.Drawing.Point(168, 80);
+            this.buttonSwap.Name = "buttonSwap";
+            this.buttonSwap.Size = new System.Drawing.Size(150, 24);
+            this.buttonSwap.TabIndex = 3;
+            this.buttonSwap.Text = "Swap";
+            this.buttonSwap.UseVisualStyleBackColor = true;
+            this.buttonSwap.Click += new System.EventHandler(this.buttonSwap_Click);
+            // 
+            // buttonInsert2
+            // 
+            this.buttonInsert2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert2, 2);
+            this.buttonInsert2.Location = new System.Drawing.Point(6, 80);
+            this.buttonInsert2.Name = "buttonInsert2";
+            this.buttonInsert2.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert2.TabIndex = 5;
+            this.buttonInsert2.Text = "Insert (2)";
+            this.buttonInsert2.UseVisualStyleBackColor = true;
+            this.buttonInsert2.Click += new System.EventHandler(this.buttonInsert2_Click);
+            // 
+            // buttonInsert3
+            // 
+            this.buttonInsert3.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert3, 2);
+            this.buttonInsert3.Location = new System.Drawing.Point(6, 117);
+            this.buttonInsert3.Name = "buttonInsert3";
+            this.buttonInsert3.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert3.TabIndex = 6;
+            this.buttonInsert3.Text = "Insert (3)";
+            this.buttonInsert3.UseVisualStyleBackColor = true;
+            this.buttonInsert3.Click += new System.EventHandler(this.buttonInsert3_Click);
             // 
             // groupBox2
             // 
@@ -546,7 +570,7 @@
             this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
             this.panelSolvedGraph.Name = "panelSolvedGraph";
             this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Size = new System.Drawing.Size(593, 593);
+            this.panelSolvedGraph.Size = new System.Drawing.Size(592, 592);
             this.panelSolvedGraph.TabIndex = 3;
             this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
             // 
@@ -560,39 +584,15 @@
             this.openFileDialog.Filter = "Txt files|*.txt|All files|*.*";
             this.openFileDialog.Title = "TAP";
             // 
-            // buttonInsert2
-            // 
-            this.buttonInsert2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert2, 2);
-            this.buttonInsert2.Location = new System.Drawing.Point(168, 80);
-            this.buttonInsert2.Name = "buttonInsert2";
-            this.buttonInsert2.Size = new System.Drawing.Size(150, 24);
-            this.buttonInsert2.TabIndex = 5;
-            this.buttonInsert2.Text = "Insert (2)";
-            this.buttonInsert2.UseVisualStyleBackColor = true;
-            this.buttonInsert2.Click += new System.EventHandler(this.buttonInsert2_Click);
-            // 
-            // buttonInsert3
-            // 
-            this.buttonInsert3.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert3, 2);
-            this.buttonInsert3.Location = new System.Drawing.Point(168, 117);
-            this.buttonInsert3.Name = "buttonInsert3";
-            this.buttonInsert3.Size = new System.Drawing.Size(150, 24);
-            this.buttonInsert3.TabIndex = 6;
-            this.buttonInsert3.Text = "Insert (3)";
-            this.buttonInsert3.UseVisualStyleBackColor = true;
-            this.buttonInsert3.Click += new System.EventHandler(this.buttonInsert3_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(946, 599);
+            this.ClientSize = new System.Drawing.Size(945, 598);
             this.Controls.Add(this.mainLayoutPanel);
             this.MinimumSize = new System.Drawing.Size(807, 483);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "TravelingAssemblerProblem";
             this.ResizeEnd += new System.EventHandler(this.Form1_ResizeEnd);
             this.mainLayoutPanel.ResumeLayout(false);
             this.flowLayoutPanel1.ResumeLayout(false);
