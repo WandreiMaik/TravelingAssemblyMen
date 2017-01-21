@@ -11,8 +11,8 @@ namespace TravelingAssemblyMen.Model
     {
         private static Color[] colors =
         {
-            Color.Red,
             Color.Blue,
+            Color.Red,
             Color.Green,
             Color.Brown,
             Color.Orange,

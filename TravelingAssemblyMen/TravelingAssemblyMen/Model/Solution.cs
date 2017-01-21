@@ -142,14 +142,14 @@ namespace TravelingAssemblyMen.Model
 
         internal void DrawSolution(Graphics graphics, Position origin, Double pixelsPerKilometer)
         {
-            foreach (Assembler worker in _team)
-            {
-                worker.Draw(graphics, origin, pixelsPerKilometer, ColorPicker.NextColor);
-            }
-
             foreach (Location customer in _task.Customers)
             {
                 customer.Draw(graphics, origin, pixelsPerKilometer);
+            }
+
+            foreach (Assembler worker in _team)
+            {
+                worker.Draw(graphics, origin, pixelsPerKilometer, ColorPicker.NextColor);
             }
         }
 

@@ -167,14 +167,8 @@ namespace TravelingAssemblyMen.Model
             {
                 Location nextCustomer = _customersAssigned[taskIndex];
 
-                if (taskIndex == 0)
-                {
-                    currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, Color.Black);
-                }
-                else
-                {
-                    currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, lineColor);
-                }
+                
+                currentLocation.DrawLineTo(nextCustomer, graphics, origin, pixelsPerKilometer, lineColor);
 
                 currentLocation = nextCustomer;
             }

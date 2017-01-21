@@ -54,7 +54,7 @@
             this.numericUpDownNeighborhoodRange = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.button2Opt = new System.Windows.Forms.Button();
-            this.buttonInsert = new System.Windows.Forms.Button();
+            this.buttonInsert1 = new System.Windows.Forms.Button();
             this.buttonSwap = new System.Windows.Forms.Button();
             this.buttonInsert2 = new System.Windows.Forms.Button();
             this.buttonInsert3 = new System.Windows.Forms.Button();
@@ -96,7 +96,7 @@
             this.mainLayoutPanel.RowCount = 2;
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.mainLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.mainLayoutPanel.Size = new System.Drawing.Size(945, 598);
+            this.mainLayoutPanel.Size = new System.Drawing.Size(1008, 661);
             this.mainLayoutPanel.TabIndex = 0;
             // 
             // flowLayoutPanel1
@@ -111,7 +111,7 @@
             this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.mainLayoutPanel.SetRowSpan(this.flowLayoutPanel1, 2);
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 592);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(341, 655);
             this.flowLayoutPanel1.TabIndex = 2;
             // 
             // groupBoxManageTAP
@@ -178,7 +178,7 @@
             this.numericCustomercount.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numericCustomercount.Location = new System.Drawing.Point(90, 7);
             this.numericCustomercount.Maximum = new decimal(new int[] {
-            1000,
+            250,
             0,
             0,
             0});
@@ -201,7 +201,7 @@
             this.numericAssemblercount.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.numericAssemblercount.Location = new System.Drawing.Point(254, 7);
             this.numericAssemblercount.Maximum = new decimal(new int[] {
-            20,
+            10,
             0,
             0,
             0});
@@ -405,7 +405,7 @@
             this.tableLayoutPanel6.Controls.Add(this.numericUpDownNeighborhoodRange, 3, 0);
             this.tableLayoutPanel6.Controls.Add(this.label5, 1, 0);
             this.tableLayoutPanel6.Controls.Add(this.button2Opt, 2, 1);
-            this.tableLayoutPanel6.Controls.Add(this.buttonInsert, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.buttonInsert1, 0, 1);
             this.tableLayoutPanel6.Controls.Add(this.buttonSwap, 2, 2);
             this.tableLayoutPanel6.Controls.Add(this.buttonInsert2, 0, 2);
             this.tableLayoutPanel6.Controls.Add(this.buttonInsert3, 0, 3);
@@ -467,17 +467,18 @@
             this.button2Opt.UseVisualStyleBackColor = true;
             this.button2Opt.Click += new System.EventHandler(this.button2Opt_Click);
             // 
-            // buttonInsert
+            // buttonInsert1
             // 
-            this.buttonInsert.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert, 2);
-            this.buttonInsert.Location = new System.Drawing.Point(6, 43);
-            this.buttonInsert.Name = "buttonInsert";
-            this.buttonInsert.Size = new System.Drawing.Size(150, 24);
-            this.buttonInsert.TabIndex = 4;
-            this.buttonInsert.Text = "Insert (1)";
-            this.buttonInsert.UseVisualStyleBackColor = true;
-            this.buttonInsert.Click += new System.EventHandler(this.buttonInsert_Click);
+            this.buttonInsert1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert1, 2);
+            this.buttonInsert1.Enabled = false;
+            this.buttonInsert1.Location = new System.Drawing.Point(6, 43);
+            this.buttonInsert1.Name = "buttonInsert1";
+            this.buttonInsert1.Size = new System.Drawing.Size(150, 24);
+            this.buttonInsert1.TabIndex = 4;
+            this.buttonInsert1.Text = "Insert (1)";
+            this.buttonInsert1.UseVisualStyleBackColor = true;
+            this.buttonInsert1.Click += new System.EventHandler(this.buttonInsert_Click);
             // 
             // buttonSwap
             // 
@@ -496,6 +497,7 @@
             // 
             this.buttonInsert2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert2, 2);
+            this.buttonInsert2.Enabled = false;
             this.buttonInsert2.Location = new System.Drawing.Point(6, 80);
             this.buttonInsert2.Name = "buttonInsert2";
             this.buttonInsert2.Size = new System.Drawing.Size(150, 24);
@@ -508,6 +510,7 @@
             // 
             this.buttonInsert3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.tableLayoutPanel6.SetColumnSpan(this.buttonInsert3, 2);
+            this.buttonInsert3.Enabled = false;
             this.buttonInsert3.Location = new System.Drawing.Point(6, 117);
             this.buttonInsert3.Name = "buttonInsert3";
             this.buttonInsert3.Size = new System.Drawing.Size(150, 24);
@@ -570,7 +573,7 @@
             this.panelSolvedGraph.Location = new System.Drawing.Point(350, 3);
             this.panelSolvedGraph.Name = "panelSolvedGraph";
             this.mainLayoutPanel.SetRowSpan(this.panelSolvedGraph, 2);
-            this.panelSolvedGraph.Size = new System.Drawing.Size(592, 592);
+            this.panelSolvedGraph.Size = new System.Drawing.Size(655, 655);
             this.panelSolvedGraph.TabIndex = 3;
             this.panelSolvedGraph.Paint += new System.Windows.Forms.PaintEventHandler(this.panelSolvedGraph_Paint);
             // 
@@ -588,7 +591,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(945, 598);
+            this.ClientSize = new System.Drawing.Size(1008, 661);
             this.Controls.Add(this.mainLayoutPanel);
             this.MinimumSize = new System.Drawing.Size(807, 483);
             this.Name = "Form1";
@@ -656,7 +659,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.Button buttonSwap;
         private System.Windows.Forms.Button button2Opt;
-        private System.Windows.Forms.Button buttonInsert;
+        private System.Windows.Forms.Button buttonInsert1;
         private System.Windows.Forms.Button buttonInsert2;
         private System.Windows.Forms.Button buttonInsert3;
     }

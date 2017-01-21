@@ -67,7 +67,7 @@ namespace TravelingAssemblyMen.Model
         #region CheckedCoordinates
         private Double _X
         {
-            get { return Math.Round(_position.x, 1); }
+            get { return Math.Round(_position.x); }
             set
             {
                 if (value > rightHorizontalBound || value < leftHorizontalBound)
@@ -80,7 +80,7 @@ namespace TravelingAssemblyMen.Model
         }
         private Double _Y
         {
-            get { return Math.Round(_position.y, 1); }
+            get { return Math.Round(_position.y); }
             set
             {
                 if (value > upperVerticalBound || value < lowerVerticalBound)
@@ -126,7 +126,7 @@ namespace TravelingAssemblyMen.Model
 
         public void Draw(Graphics graphics, Position origin, Double pixelsPerKilometer, Color color)
         {
-            graphics.FillEllipse(new SolidBrush(color), (float)(_X * pixelsPerKilometer + origin.x - 4), (float)(_Y * pixelsPerKilometer + origin.y - 4), 8, 8);
+            graphics.FillRectangle(new SolidBrush(color), (float)(_X * pixelsPerKilometer + origin.x - 3), (float)(_Y * pixelsPerKilometer + origin.y - 3), 6, 6);
         }
 
         public void DrawLineTo(Location nextCustomer, Graphics graphics, Position origin, Double pixelsPerKilometer, Color lineColor)

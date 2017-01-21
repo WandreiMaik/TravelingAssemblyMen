@@ -36,6 +36,9 @@ namespace TravelingAssemblyMen
             buttonSolveRandomly.Enabled = true;
             buttonSwap.Enabled = false;
             button2Opt.Enabled = false;
+            buttonInsert1.Enabled = false;
+            buttonInsert2.Enabled = false;
+            buttonInsert3.Enabled = false;
             panelSolvedGraph.Invalidate();
         }
 
@@ -64,6 +67,9 @@ namespace TravelingAssemblyMen
             _problem.SolveRandomly();
             buttonSwap.Enabled = true;
             button2Opt.Enabled = true;
+            buttonInsert1.Enabled = true;
+            buttonInsert2.Enabled = true;
+            buttonInsert3.Enabled = true;
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
@@ -129,6 +135,9 @@ namespace TravelingAssemblyMen
                     buttonSolveRandomly.Enabled = true;
                     buttonSwap.Enabled = false;
                     button2Opt.Enabled = false;
+                    buttonInsert1.Enabled = false;
+                    buttonInsert2.Enabled = false;
+                    buttonInsert3.Enabled = false;
                     numericAssemblercount.Value = _problem.NumberOfAssembler;
                     numericCustomercount.Value = _problem.NumberOfCustomers;
                     panelSolvedGraph.Invalidate();
@@ -145,6 +154,9 @@ namespace TravelingAssemblyMen
             _problem.SolveGreedy();
             buttonSwap.Enabled = true;
             button2Opt.Enabled = true;
+            buttonInsert1.Enabled = true;
+            buttonInsert2.Enabled = true;
+            buttonInsert3.Enabled = true;
             panelSolvedGraph.Invalidate();
             UpdateFitness();
         }
