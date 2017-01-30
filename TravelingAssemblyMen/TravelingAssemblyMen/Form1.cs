@@ -22,15 +22,23 @@ namespace TravelingAssemblyMen
             InitializeComponent();
         }
 
-        private void UpdateFitness()
+        private void Form1_ResizeEnd(object sender, EventArgs e)
         {
-            labelFitnessValue.Text = _problem.FitnessValue();
+            if (panelSolvedGraph.Width > panelSolvedGraph.Height)
+            {
+                this.Width -= panelSolvedGraph.Width - panelSolvedGraph.Height;
+                panelSolvedGraph.Invalidate();
+                return;
+            }
+
+            this.Height -= panelSolvedGraph.Height - panelSolvedGraph.Width;
+            panelSolvedGraph.Invalidate();
         }
 
         private void buttonGenerateTAP_Click(object sender, EventArgs e)
         {
             _problem = new TAP((Int32)numericAssemblercount.Value, (Int32)numericCustomercount.Value, _overtimePenaltyWeight, _overallDistanceWeight);
-            labelFitnessValue.Text = "0";
+            labelFitnessValue.Text = "0,0000000000";
             buttonSaveTAP.Enabled = true;
             buttonSolveGreedy.Enabled = true;
             buttonSolveRandomly.Enabled = true;
@@ -40,78 +48,6 @@ namespace TravelingAssemblyMen
             buttonInsert2.Enabled = false;
             buttonInsert3.Enabled = false;
             panelSolvedGraph.Invalidate();
-        }
-
-        private void panelSolvedGraph_Paint(object sender, PaintEventArgs e)
-        {
-            Double width = e.Graphics.VisibleClipBounds.Width;
-            Double height = e.Graphics.VisibleClipBounds.Height;
-
-            Position origin = new Position();
-            origin.x = width / 2;
-            origin.y = width / 2;
-
-            Double pixelsPerKilometer = (width - 40) / 100;
-
-            // headquarters
-            TravelingAssemblyMen.Model.Location.HQ.Draw(e.Graphics, origin, pixelsPerKilometer, Color.Red);
-
-            if (_problem != null)
-            {
-                _problem.DrawSolution(e.Graphics, origin, pixelsPerKilometer);
-            }
-        }
-
-        private void buttonSolveRandomly_Click(object sender, EventArgs e)
-        {
-            _problem.SolveRandomly();
-            buttonSwap.Enabled = true;
-            button2Opt.Enabled = true;
-            buttonInsert1.Enabled = true;
-            buttonInsert2.Enabled = true;
-            buttonInsert3.Enabled = true;
-            panelSolvedGraph.Invalidate();
-            UpdateFitness();
-        }
-
-        private void textBoxOvertimePenalty_TextChanged(object sender, EventArgs e)
-        {
-            double newValue;
-
-            if (Double.TryParse(textBoxOvertimePenalty.Text, out newValue))
-            {
-                _overtimePenaltyWeight = newValue;
-
-                if (_problem != null)
-                {
-                    _problem.OvertimePenaltyWeight = newValue;
-                }
-
-                return;
-            }
-
-            MessageBox.Show("The input Value for the overtime penalty weight is not a correct floating point value.");
-            textBoxOvertimePenalty.Text = _overtimePenaltyWeight.ToString();
-        }
-
-        private void textBoxOverallWorkload_TextChanged(object sender, EventArgs e)
-        {
-            double newValue;
-
-            if (Double.TryParse(textBoxOverallDistance.Text, out newValue))
-            {
-                _overallDistanceWeight = newValue;
-
-                if (_problem != null)
-                {
-                    _problem.OverallWorkloadWeight = newValue;
-                }
-
-                return;
-            }
-
-            MessageBox.Show("The input Value for the overall workload weight is not a correct floating point value.");
-            textBoxOverallDistance.Text = _overallDistanceWeight.ToString();
         }
 
         private void buttonSaveTAP_Click(object sender, EventArgs e)
@@ -161,24 +97,93 @@ namespace TravelingAssemblyMen
             UpdateFitness();
         }
 
+        private void buttonSolveRandomly_Click(object sender, EventArgs e)
+        {
+            _problem.SolveRandomly();
+            buttonSwap.Enabled = true;
+            button2Opt.Enabled = true;
+            buttonInsert1.Enabled = true;
+            buttonInsert2.Enabled = true;
+            buttonInsert3.Enabled = true;
+            panelSolvedGraph.Invalidate();
+            UpdateFitness();
+        }
+
+        private void textBoxOvertimePenalty_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                OvertimePenaltyChanged();
+            }
+        }
+
+        private void textBoxOvertimePenalty_Leave(object sender, EventArgs e)
+        {
+            OvertimePenaltyChanged();
+        }
+
+        private void OvertimePenaltyChanged()
+        {
+            double newValue;
+
+            if (Double.TryParse(textBoxOvertimePenalty.Text, out newValue))
+            {
+                _overtimePenaltyWeight = newValue;
+
+                if (_problem != null)
+                {
+                    _problem.OvertimePenaltyWeight = newValue;
+                }
+
+                UpdateFitness();
+
+                return;
+            }
+
+            MessageBox.Show("The input Value for the overtime penalty weight is not a correct floating point value.");
+            textBoxOvertimePenalty.Text = _overtimePenaltyWeight.ToString();
+        }
+
+        private void textBoxOverallDistance_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                OverallDistancePenaltyChanged();
+            }
+        }
+
+        private void textBoxOverallDistance_Leave(object sender, EventArgs e)
+        {
+            OverallDistancePenaltyChanged();
+        }
+
+        private void OverallDistancePenaltyChanged()
+        {
+            double newValue;
+
+            if (Double.TryParse(textBoxOverallDistance.Text, out newValue))
+            {
+                _overallDistanceWeight = newValue;
+
+                if (_problem != null)
+                {
+                    _problem.OverallDistanceWeight = newValue;
+                }
+
+                UpdateFitness();
+
+                return;
+            }
+
+            MessageBox.Show("The input Value for the overall workload weight is not a correct floating point value.");
+            textBoxOverallDistance.Text = _overallDistanceWeight.ToString();
+        }
+
         private void button2Opt_Click(object sender, EventArgs e)
         {
             _problem.LocalOptimisation(LocalOptimisationStyle.TwoOpt, (int)numericUpDownNeighborhoodRange.Value);
             panelSolvedGraph.Invalidate();
             UpdateFitness();
-        }
-
-        private void Form1_ResizeEnd(object sender, EventArgs e)
-        {
-            if (panelSolvedGraph.Width > panelSolvedGraph.Height)
-            {
-                this.Width -= panelSolvedGraph.Width - panelSolvedGraph.Height;
-                panelSolvedGraph.Invalidate();
-                return;
-            }
-
-            this.Height -= panelSolvedGraph.Height - panelSolvedGraph.Width;
-            panelSolvedGraph.Invalidate();
         }
 
         private void buttonSwap_Click(object sender, EventArgs e)
@@ -207,6 +212,30 @@ namespace TravelingAssemblyMen
             _problem.LocalOptimisation(LocalOptimisationStyle.Insert3, (int)numericUpDownNeighborhoodRange.Value);
             panelSolvedGraph.Invalidate();
             UpdateFitness();
+        }
+       private void UpdateFitness()
+        {
+            labelFitnessValue.Text = _problem.FitnessValue();
+        }
+
+        private void panelSolvedGraph_Paint(object sender, PaintEventArgs e)
+        {
+            Double width = e.Graphics.VisibleClipBounds.Width;
+            Double height = e.Graphics.VisibleClipBounds.Height;
+
+            Position origin = new Position();
+            origin.x = width / 2;
+            origin.y = width / 2;
+
+            Double pixelsPerKilometer = (width - 40) / 100;
+
+            // headquarters
+            TravelingAssemblyMen.Model.Location.HQ.Draw(e.Graphics, origin, pixelsPerKilometer, Color.Red);
+
+            if (_problem != null)
+            {
+                _problem.DrawSolution(e.Graphics, origin, pixelsPerKilometer);
+            }
         }
     }
 }

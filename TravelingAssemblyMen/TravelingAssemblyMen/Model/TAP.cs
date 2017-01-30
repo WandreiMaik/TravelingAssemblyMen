@@ -52,9 +52,9 @@ namespace TravelingAssemblyMen.Model
             set { _solution.OvertimePenaltyWeigth = value; }
         }
 
-        public Double OverallWorkloadWeight
+        public Double OverallDistanceWeight
         {
-            set { _solution.OverallWorkloadWeight = value; }
+            set { _solution.OverallDistanceWeight = value; }
         }
 
         #region Constructors

@@ -371,8 +371,9 @@
             this.textBoxOvertimePenalty.Name = "textBoxOvertimePenalty";
             this.textBoxOvertimePenalty.Size = new System.Drawing.Size(171, 20);
             this.textBoxOvertimePenalty.TabIndex = 4;
-            this.textBoxOvertimePenalty.Text = "1,0";
-            this.textBoxOvertimePenalty.TextChanged += new System.EventHandler(this.textBoxOvertimePenalty_TextChanged);
+            this.textBoxOvertimePenalty.Text = "1";
+            this.textBoxOvertimePenalty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxOvertimePenalty_KeyPress);
+            this.textBoxOvertimePenalty.Leave += new System.EventHandler(this.textBoxOvertimePenalty_Leave);
             // 
             // textBoxOverallDistance
             // 
@@ -381,8 +382,9 @@
             this.textBoxOverallDistance.Name = "textBoxOverallDistance";
             this.textBoxOverallDistance.Size = new System.Drawing.Size(171, 20);
             this.textBoxOverallDistance.TabIndex = 5;
-            this.textBoxOverallDistance.Text = "1,0";
-            this.textBoxOverallDistance.TextChanged += new System.EventHandler(this.textBoxOverallWorkload_TextChanged);
+            this.textBoxOverallDistance.Text = "1";
+            this.textBoxOverallDistance.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxOverallDistance_KeyPress);
+            this.textBoxOverallDistance.Leave += new System.EventHandler(this.textBoxOverallDistance_Leave);
             // 
             // groupBox3
             // 
